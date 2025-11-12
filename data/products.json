@@ -1,0 +1,111 @@
+[
+  {
+    "id": "1",
+    "name": "Modern Sofa Set",
+    "description": "Elegant and comfortable sofa set perfect for your living room. Made with premium materials and designed for modern homes.",
+    "price": 5200000,
+    "image": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop",
+    "category": "Furniture",
+    "stock": 15
+  },
+  {
+    "id": "2",
+    "name": "Wooden Coffee Table",
+    "description": "Beautiful handcrafted wooden coffee table with minimalist design. Perfect centerpiece for any living space.",
+    "price": 1400000,
+    "image": "https://images.unsplash.com/photo-1532372320572-cda25653a26d?w=800&h=600&fit=crop",
+    "category": "Furniture",
+    "stock": 25
+  },
+  {
+    "id": "3",
+    "name": "Decorative Lamp",
+    "description": "Stylish floor lamp that adds warmth and ambiance to any room. Adjustable height and modern design.",
+    "price": 360000,
+    "image": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&h=600&fit=crop",
+    "category": "Lighting",
+    "stock": 40
+  },
+  {
+    "id": "4",
+    "name": "Velvet Armchair",
+    "description": "Luxurious velvet armchair in warm beige tones. Comfortable and elegant, perfect for reading corners.",
+    "price": 1840000,
+    "image": "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&h=600&fit=crop",
+    "category": "Furniture",
+    "stock": 12
+  },
+  {
+    "id": "5",
+    "name": "Ceramic Vase Set",
+    "description": "Set of three ceramic vases in neutral tones. Perfect for adding a touch of elegance to your decor.",
+    "price": 320000,
+    "image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+    "category": "Decor",
+    "stock": 50
+  },
+  {
+    "id": "6",
+    "name": "Woven Wall Hanging",
+    "description": "Handwoven macrame wall hanging in natural fibers. Adds texture and bohemian charm to any wall.",
+    "price": 520000,
+    "image": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop",
+    "category": "Decor",
+    "stock": 30
+  },
+  {
+    "id": "7",
+    "name": "Modern Dining Table",
+    "description": "Sleek dining table that seats six. Made from sustainable wood with a beautiful natural finish.",
+    "price": 3600000,
+    "image": "https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=800&h=600&fit=crop",
+    "category": "Furniture",
+    "stock": 8
+  },
+  {
+    "id": "8",
+    "name": "Pendant Light",
+    "description": "Contemporary pendant light fixture with warm glow. Perfect for kitchen islands or dining areas.",
+    "price": 600000,
+    "image": "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=800&h=600&fit=crop",
+    "category": "Lighting",
+    "stock": 35
+  },
+  {
+    "id": "9",
+    "name": "Throw Pillow Set",
+    "description": "Set of four decorative throw pillows in various textures and neutral colors. Mix and match for your style.",
+    "price": 240000,
+    "image": "https://images.unsplash.com/photo-1584100936595-360a8db5e74e?w=800&h=600&fit=crop",
+    "category": "Decor",
+    "stock": 60
+  },
+  {
+    "id": "10",
+    "name": "Bookshelf Unit",
+    "description": "Open bookshelf with five shelves. Perfect for displaying books, plants, and decorative items.",
+    "price": 1200000,
+    "image": "https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?w=800&h=600&fit=crop",
+    "category": "Furniture",
+    "stock": 20
+  },
+  {
+    "id": "11",
+    "name": "Table Lamp",
+    "description": "Elegant table lamp with fabric shade. Provides soft, ambient lighting for bedrooms or offices.",
+    "price": 280000,
+    "image": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&h=600&fit=crop",
+    "category": "Lighting",
+    "stock": 45
+  },
+  {
+    "id": "12",
+    "name": "Area Rug",
+    "description": "Soft area rug in warm beige tones with geometric pattern. Adds comfort and style to any room.",
+    "price": 800000,
+    "image": "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=800&h=600&fit=crop",
+    "category": "Decor",
+    "stock": 18
+  }
+]
+
