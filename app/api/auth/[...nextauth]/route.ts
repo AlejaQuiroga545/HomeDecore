@@ -2,7 +2,7 @@ import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import connectDB from '@/lib/mongodb'
 import User from '@/models/User'
-import { sendWelcomeEmail } from '@/lib/nodemailer'
+import { sendWelcomeEmail, sendLoginEmail } from '@/lib/nodemailer'
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -23,6 +23,7 @@ export const authOptions: NextAuthOptions = {
           const existingUser = await User.findOne({ email: user.email })
 
           if (!existingUser) {
+            // New user registration - send welcome email
             const newUser = new User({
               email: user.email,
               name: user.name,
@@ -31,10 +32,19 @@ export const authOptions: NextAuthOptions = {
               emailVerified: new Date(),
             })
             await newUser.save()
-            await sendWelcomeEmail(user.email!, user.name || undefined)
+            // Send email without blocking authentication
+            sendWelcomeEmail(user.email!, user.name || undefined).catch((error) => {
+              console.error('Failed to send welcome email:', error)
+            })
+          } else {
+            // Existing user login - send login notification email
+            // Send email without blocking authentication
+            sendLoginEmail(user.email!, existingUser.name || user.name || undefined).catch((error) => {
+              console.error('Failed to send login email:', error)
+            })
           }
         } catch (error) {
-          console.error('Error in signIn callback:', error)
+          console.error('Error in Google sign-in callback:', error)
           return false
         }
       }
