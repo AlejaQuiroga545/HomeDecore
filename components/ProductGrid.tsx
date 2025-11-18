@@ -1,0 +1,40 @@
+'use client'
+
+import ProductCard from './ProductCard'
+
+interface Product {
+  id: string
+  name: string
+  price: number
+  image: string
+}
+
+interface ProductGridProps {
+  products: Product[]
+}
+
+// Product grid to display in shop
+export default function ProductGrid({ products }: ProductGridProps) {
+  // If no products
+  if (products.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-brown-600 text-lg">No products found.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {products.map((product) => (
+        <ProductCard
+          key={product.id}
+          id={product.id}
+          name={product.name}
+          price={product.price}
+          image={product.image}
+        />
+      ))}
+    </div>
+  )
+}

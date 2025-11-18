@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Modern Sofa Set",
+    "description": "Elegant and comfortable sofa set perfect for your living room. Made with premium materials and designed for modern homes.",
+    "price": 5200000,
+    "image": "https://res.cloudinary.com/dzfkzcheg/image/upload/v1763466610/Modern_Sofa_Set_u2phri.jpg",
+    "category": "Furniture",
+    "stock": 15
+  },
+  {
+    "name": "Wooden Coffee Table",
+    "description": "Beautiful handcrafted wooden coffee table with minimalist design. Perfect centerpiece for any living space.",
+    "price": 1400000,
+    "image": "https://res.cloudinary.com/dzfkzcheg/image/upload/v1763466658/Wooden_Coffee_Table_cexism.jpg",
+    "category": "Furniture",
+    "stock": 25
+  },
+  {
+    "name": "Decorative Floor Lamp",
+    "description": "Stylish floor lamp that adds warmth and ambiance to any room. Adjustable height and modern design.",
+    "price": 360000,
+    "image": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&h=600&fit=crop",
+    "category": "Lighting",
+    "stock": 40
+  },
+  {
+    "name": "Velvet Armchair",
+    "description": "Luxurious velvet armchair in warm beige tones. Comfortable and elegant, perfect for reading corners.",
+    "price": 1840000,
+    "image": "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&h=600&fit=crop",
+    "category": "Furniture",
+    "stock": 12
+  },
+  {
+    "name": "Ceramic Vase Set",
+    "description": "Set of three ceramic vases in neutral tones. Perfect for adding a touch of elegance to your decor.",
+    "price": 320000,
+    "image": "https://res.cloudinary.com/dzfkzcheg/image/upload/v1763467551/Ceramic_Vase_Set_xd9esl.jpg",
+    "category": "Decor",
+    "stock": 50
+  },
+  {
+    "name": "Woven Wall Hanging",
+    "description": "Handwoven macrame wall hanging in natural fibers. Adds texture and bohemian charm to any wall.",
+    "price": 520000,
+    "image": "https://res.cloudinary.com/dzfkzcheg/image/upload/v1763467558/Woven_Wall_Hanging_cm62el.jpg",
+    "category": "Decor",
+    "stock": 30
+  },
+  {
+    "name": "Modern Dining Table",
+    "description": "Sleek dining table that seats six. Made from sustainable wood with a beautiful natural finish.",
+    "price": 3600000,
+    "image": "https://res.cloudinary.com/dzfkzcheg/image/upload/v1763467551/Modern_Dining_Table_vev3em.jpg",
+    "category": "Furniture",
+    "stock": 8
+  },
+  {
+    "name": "Pendant Light Fixture",
+    "description": "Contemporary pendant light fixture with warm glow. Perfect for kitchen islands or dining areas.",
+    "price": 600000,
+    "image": "https://res.cloudinary.com/dzfkzcheg/image/upload/v1763467553/Pendant_Light_Fixture_jpkpmv.jpg",
+    "category": "Lighting",
+    "stock": 35
+  }]
