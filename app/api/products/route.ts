@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import connectDB from '@/lib/mongodb'
 import Product from '@/models/Product'
-import User from '@/models/User'
-import { sendNewProductEmail } from '@/lib/nodemailer'
 
 // Get all products
 export async function GET() {
@@ -46,29 +44,6 @@ export async function POST(request: NextRequest) {
     })
     
     await product.save()
-
-    // Send email notification to all users (except admins)
-    try {
-      const users = await User.find({ role: 'user' })
-      for (const user of users) {
-        if (user.email) {
-          sendNewProductEmail(
-            user.email,
-            user.name || undefined,
-            product.name,
-            product.description,
-            product.price,
-            product.image,
-            product.category
-          ).catch((error) => {
-            console.error(`Error sending email to ${user.email}:`, error)
-          })
-        }
-      }
-    } catch (emailError) {
-      // Don't fail the product creation if email sending fails
-      console.error('Error sending product notification emails:', emailError)
-    }
 
     return NextResponse.json(product, { status: 201 })
   } catch (error: any) {

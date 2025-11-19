@@ -40,7 +40,9 @@ export async function POST(request: NextRequest) {
     await user.save()
 
     // Send welcome email
-    sendWelcomeEmail(user.email, user.name).catch(console.error)
+    sendWelcomeEmail(user.email, user.name).catch((error) => {
+      console.error('Failed to send welcome email:', error)
+    })
 
     // Return created user data
     return NextResponse.json(

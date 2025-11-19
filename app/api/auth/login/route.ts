@@ -40,7 +40,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Send login notification email
-    sendLoginEmail(user.email, user.name).catch(console.error)
+    sendLoginEmail(user.email, user.name).catch((error) => {
+      console.error('Failed to send login email:', error)
+    })
 
     // Return user data
     return NextResponse.json({

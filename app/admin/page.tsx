@@ -42,12 +42,12 @@ export default function AdminPage() {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#8b7359',
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Yes, delete it',
+      cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
         deleteProduct(id)
-        toast.success('Producto eliminado exitosamente', {
+        toast.success('Product successfully removed', {
           position: 'top-right',
           autoClose: 2000,
         })
@@ -80,7 +80,7 @@ export default function AdminPage() {
         category: formData.category,
         stock: parseInt(formData.stock) || 0,
       })
-      toast.success('Producto actualizado exitosamente', {
+      toast.success('Product updated successfully', {
         position: 'top-right',
         autoClose: 2000,
       })
@@ -93,7 +93,7 @@ export default function AdminPage() {
         category: formData.category,
         stock: parseInt(formData.stock) || 0,
       })
-      toast.success('Producto agregado exitosamente', {
+      toast.success('Product successfully added', {
         position: 'top-right',
         autoClose: 2000,
       })
@@ -144,29 +144,29 @@ export default function AdminPage() {
   return (
     <div className="pt-20 pb-16 min-h-screen bg-beige-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-4xl font-bold text-brown-800 mb-8">Panel de Administración</h1>
+        <h1 className="text-4xl font-bold text-brown-800 mb-8">Administration panel</h1>
 
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <h2 className="text-2xl font-semibold text-brown-800 mb-4">
-            {isEditing ? 'Editar Producto' : 'Agregar Nuevo Producto'}
+            {isEditing ? 'Edit product' : 'Add new product'}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
-                label="Nombre"
+                label="Name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
               />
               <Input
-                label="Categoría"
+                label="Category"
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                 required
               />
             </div>
             <Input
-              label="Descripción"
+              label="Description"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               required
@@ -174,7 +174,7 @@ export default function AdminPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Input
                 type="number"
-                label="Precio"
+                label="Price"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                 step="0.01"
@@ -189,7 +189,7 @@ export default function AdminPage() {
                 required
               />
               <Input
-                label="URL de Imagen"
+                label="Image URL"
                 value={formData.image}
                 onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                 required
@@ -197,11 +197,11 @@ export default function AdminPage() {
             </div>
             <div className="flex gap-4">
               <Button type="submit">
-                {isEditing ? 'Actualizar' : 'Agregar'} Producto
+                {isEditing ? 'Update' : 'Add'} Producto
               </Button>
               {isEditing && (
                 <Button type="button" variant="outline" onClick={handleCancel}>
-                  Cancelar
+                  Cancel
                 </Button>
               )}
             </div>
@@ -216,7 +216,7 @@ export default function AdminPage() {
               <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-brown-400" />
               <Input
                 type="text"
-                placeholder="Buscar productos..."
+                placeholder="Search products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-12"
@@ -244,12 +244,12 @@ export default function AdminPage() {
             <table className="w-full">
               <thead className="bg-beige-100">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-brown-800">Imagen</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-brown-800">Nombre</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-brown-800">Categoría</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-brown-800">Precio</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-brown-800">Image</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-brown-800">Name</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-brown-800">Category</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-brown-800">Price</th>
                   <th className="px-4 py-3 text-left text-sm font-semibold text-brown-800">Stock</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-brown-800">Acciones</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-brown-800">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-beige-200">
@@ -310,4 +310,3 @@ export default function AdminPage() {
     </div>
   )
 }
-
