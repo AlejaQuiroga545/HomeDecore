@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
+import { useLanguage } from '@/context/LanguageContext'
 import Input from '@/components/Input'
 import Button from '@/components/Button'
 import { toast } from 'react-toastify'
@@ -21,6 +22,7 @@ interface UserProfile {
 export default function ProfilePage() {
   const router = useRouter()
   const { user, logout } = useAuth()
+  const { t } = useLanguage()
   const [profile, setProfile] = useState<UserProfile>({
     name: '',
     email: '',
@@ -69,7 +71,7 @@ export default function ProfilePage() {
   const handleSave = async () => {
     // Validate that name is not empty
     if (!profile.name.trim()) {
-      toast.error('Name is required', {
+      toast.error(t.profile.nameRequired, {
         position: 'top-right',
         autoClose: 2000,
       })
@@ -85,7 +87,7 @@ export default function ProfilePage() {
       })
       
       if (response.data) {
-        toast.success('Profile updated successfully', {
+        toast.success(t.profile.profileUpdated, {
           position: 'top-right',
           autoClose: 2000,
         })
@@ -94,7 +96,7 @@ export default function ProfilePage() {
         window.location.reload()
       }
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || 'Error updating profile'
+      const errorMessage = error.response?.data?.error || t.profile.errorUpdating
       toast.error(errorMessage, {
         position: 'top-right',
         autoClose: 2000,
@@ -112,18 +114,18 @@ export default function ProfilePage() {
   // Logout
   const handleLogout = () => {
     Swal.fire({
-      title: 'Log out?',
-      text: 'Are you sure you want to log out?',
+      title: t.profile.logoutConfirm,
+      text: t.profile.logoutConfirmText,
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#C263F9',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, log out',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: t.profile.yesLogOut,
+      cancelButtonText: t.profile.cancel,
     }).then((result) => {
       if (result.isConfirmed) {
         logout()
-        router.push('/')
+        router.push('/shop')
       }
     })
   }
@@ -132,7 +134,7 @@ export default function ProfilePage() {
   if (!user || isLoading) {
     return (
       <div className="pt-14 pb-12 min-h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center">
-        <p className="text-gray-600 text-sm">Loading...</p>
+        <p className="text-gray-600 text-sm">{t.profile.loading}</p>
       </div>
     )
   }
@@ -140,7 +142,7 @@ export default function ProfilePage() {
   return (
     <div className="pt-14 pb-12 min-h-screen bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <h1 className="text-2xl font-semibold text-primary-800 mb-6 tracking-tight">My profile</h1>
+        <h1 className="text-2xl font-semibold text-primary-800 mb-6 tracking-tight">{t.profile.title}</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Profile image - Left side */}
@@ -166,10 +168,10 @@ export default function ProfilePage() {
                 <div className="mt-4">
                   <Input
                     type="text"
-                    label="Avatar URL"
+                    label={t.profile.avatarUrl}
                     value={profile.avatar}
                     onChange={(e) => setProfile({ ...profile, avatar: e.target.value })}
-                    placeholder="https://example.com/avatar.jpg"
+                    placeholder={t.profile.avatarUrlPlaceholder}
                     className="group"
                   />
                 </div>
@@ -181,17 +183,17 @@ export default function ProfilePage() {
           <div className="md:col-span-2">
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 p-6 space-y-5">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-primary-800 tracking-tight">Profile information</h2>
+                <h2 className="text-lg font-semibold text-primary-800 tracking-tight">{t.profile.profileInformation}</h2>
                 {!isEditing && (
                   <Button onClick={() => setIsEditing(true)} size="sm">
-                    Edit profile
+                    {t.profile.editProfile}
                   </Button>
                 )}
               </div>
 
               {/* Name field */}
               <Input
-                label="Name"
+                label={t.profile.name}
                 value={profile.name}
                 onChange={(e) => setProfile({ ...profile, name: e.target.value })}
                 disabled={!isEditing}
@@ -201,7 +203,7 @@ export default function ProfilePage() {
 
               {/* Email field (read only) */}
               <Input
-                label="Email"
+                label={t.profile.email}
                 value={profile.email}
                 disabled
                 className="group"
@@ -211,10 +213,10 @@ export default function ProfilePage() {
               {isEditing && (
                 <div className="flex gap-3 pt-2">
                   <Button onClick={handleSave} className="flex-1">
-                    Save changes
+                    {t.profile.saveChanges}
                   </Button>
                   <Button variant="outline" onClick={handleCancel} className="flex-1">
-                    Cancel
+                    {t.profile.cancel}
                   </Button>
                 </div>
               )}
@@ -226,7 +228,7 @@ export default function ProfilePage() {
                   onClick={handleLogout}
                   className="w-full text-red-500 border-red-300 hover:bg-red-50"
                 >
-                  Log out
+                  {t.profile.logOut}
                 </Button>
               </div>
             </div>

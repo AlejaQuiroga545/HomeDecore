@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer'
 import {
   generateWelcomeEmail,
   generateLoginEmail,
+  generateContactEmail,
 } from './emailTemplates'
 
 // Verify SMTP configuration
@@ -129,5 +130,53 @@ export async function sendLoginEmail(email: string, name?: string): Promise<void
     }
     
     // Don't throw - email failures shouldn't break login
+  }
+}
+
+// Send contact form email
+export async function sendContactEmail(name: string, email: string, message: string): Promise<void> {
+  console.log('📧 Sending contact form email from:', email)
+  
+  try {
+    if (!verifySMTPConfig()) {
+      console.warn('Contact email skipped - SMTP not configured')
+      throw new Error('SMTP configuration is missing')
+    }
+
+    const transporter = createTransporter()
+    const emailHtml = generateContactEmail(name, email, message)
+    const recipientEmail = 'qgale45@gmail.com'
+
+    // Escape name for subject line
+    const safeSubjectName = name.replace(/[<>]/g, '')
+
+    const mailOptions = {
+      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+      to: recipientEmail,
+      replyTo: email,
+      subject: `New contact form Message from ${safeSubjectName} - HomeDecor`,
+      html: emailHtml,
+    }
+
+    const result = await transporter.sendMail(mailOptions)
+
+    console.log('Contact email sent successfully to', recipientEmail)
+    console.log('Message ID:', result.messageId)
+  } catch (error: any) {
+    console.error('Failed to send contact email')
+    console.error('Error:', error.message || error)
+    
+    if (error.code === 'EAUTH' || error.message?.includes('Username and Password not accepted')) {
+      console.error('Authentication failed. Gmail requires an App Password.')
+      console.error('Get one at: https://myaccount.google.com/apppasswords')
+      console.error('Make sure 2-Step Verification is enabled first.')
+    }
+    
+    if (error.code === 'ETIMEDOUT' || error.message?.includes('Timeout')) {
+      console.error('Connection timeout. Try port 465 with SMTP_SECURE=true')
+      console.error('Or check your internet connection and firewall settings.')
+    }
+    
+    throw error // Throw for API to handle
   }
 }

@@ -3,6 +3,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useCart } from '@/context/CartContext'
+import { useLanguage } from '@/context/LanguageContext'
+import { translateProductName } from '@/lib/translations'
 import { toast } from 'react-toastify'
 import Button from './Button'
 import { formatPrice } from '@/lib/utils'
@@ -10,23 +12,26 @@ import { formatPrice } from '@/lib/utils'
 interface ProductCardProps {
   id: string
   name: string
+  originalName?: string
   price: number
   image: string
 }
 
 // Product card to display in shop
-export default function ProductCard({ id, name, price, image }: ProductCardProps) {
+export default function ProductCard({ id, name, originalName, price, image }: ProductCardProps) {
   const { addToCart } = useCart()
+  const { t } = useLanguage()
+  // name is the translated name for display, originalName is for cart/backend
 
   // Add product to cart
   const handleAddToCart = () => {
     addToCart({
       id,
-      name,
+      name: originalName || name, // Use original name for cart
       price,
       image,
     })
-    toast.success(`${name} added to cart`, {
+    toast.success(`${name} ${t.cart.addedToCart}`, {
       position: 'top-right',
       autoClose: 2000,
     })
@@ -56,7 +61,7 @@ export default function ProductCard({ id, name, price, image }: ProductCardProps
         <div className="flex items-center justify-between">
           <p className="text-base font-semibold text-primary-700">{formatPrice(price)}</p>
           <Button onClick={handleAddToCart} size="sm">
-            Add to cart
+            {t.product.addToCart}
           </Button>
         </div>
       </div>

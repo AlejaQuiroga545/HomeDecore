@@ -3,6 +3,8 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useProducts } from '@/context/ProductsContext'
+import { useLanguage } from '@/context/LanguageContext'
+import { translateCategory, translateProductName, getSearchableText } from '@/lib/translations'
 import ProductGrid from '@/components/ProductGrid'
 import Pagination from '@/components/Pagination'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
@@ -12,6 +14,7 @@ const ITEMS_PER_PAGE = 6
 export default function ShopPage() {
   const searchParams = useSearchParams()
   const { products } = useProducts()
+  const { language, t } = useLanguage()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [currentPage, setCurrentPage] = useState(1)
@@ -25,15 +28,20 @@ export default function ShopPage() {
   }, [searchParams])
 
   // Get all unique categories
+  const allCategoryLabel = t.shop.all
   const categories = ['All', ...Array.from(new Set(products.map((p) => p.category)))]
 
   // Filter products by search and category
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
-      // Search in name and description
+      // Search in name (both languages) and description
+      const searchLower = searchTerm.toLowerCase()
+      const searchableText = getSearchableText(product.name)
       const matchesSearch =
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+        searchableText.en.includes(searchLower) ||
+        searchableText.es.includes(searchLower) ||
+        product.name.toLowerCase().includes(searchLower) ||
+        product.description.toLowerCase().includes(searchLower)
       // Filter by category
       const matchesCategory =
         selectedCategory === 'All' || product.category === selectedCategory
@@ -60,10 +68,10 @@ export default function ShopPage() {
         {/* Title */}
         <div className="text-center mb-8 pt-6">
           <h1 className="text-2xl md:text-3xl font-semibold text-primary-800 mb-2 tracking-tight">
-            Our store
+            {t.shop.title}
           </h1>
           <p className="text-gray-600 text-sm">
-            Explore our complete collection of products
+            {t.shop.description}
           </p>
         </div>
 
@@ -74,7 +82,7 @@ export default function ShopPage() {
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder={t.shop.searchPlaceholder}
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value)
@@ -99,14 +107,20 @@ export default function ShopPage() {
                     : 'bg-white/80 backdrop-blur-sm text-primary-700 hover:bg-accent-50 hover:text-accent-500 border border-gray-200/50'
                 }`}
               >
-                {category}
+                {category === 'All' ? allCategoryLabel : translateCategory(category, language)}
               </button>
             ))}
           </div>
         </div>
 
         {/* Product grid */}
-        <ProductGrid products={paginatedProducts} />
+        <ProductGrid 
+          products={paginatedProducts.map(p => ({
+            ...p,
+            name: translateProductName(p.name, language),
+            originalName: p.name // Keep original name for cart
+          }))} 
+        />
 
         {/* Pagination */}
         {totalPages > 1 && (

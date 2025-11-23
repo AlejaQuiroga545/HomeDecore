@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { useAuth } from '@/context/AuthContext'
+import { useLanguage } from '@/context/LanguageContext'
 import Input from '@/components/Input'
 import Button from '@/components/Button'
 import Link from 'next/link'
@@ -12,6 +13,7 @@ import { toast } from 'react-toastify'
 export default function LoginPage() {
   const router = useRouter()
   const { login } = useAuth()
+  const { t } = useLanguage()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -23,7 +25,7 @@ export default function LoginPage() {
     setIsLoading(true)
 
     if (!email || !password) {
-      setError('Please fill in all fields')
+      setError(t.login.fillAllFields)
       setIsLoading(false)
       return
     }
@@ -31,7 +33,7 @@ export default function LoginPage() {
     try {
       const success = await login(email, password)
       if (success) {
-        toast.success('Login successful', {
+        toast.success(t.login.loginSuccessful, {
           position: 'top-right',
           autoClose: 2000,
         })
@@ -45,11 +47,11 @@ export default function LoginPage() {
           }
         }, 300)
       } else {
-        setError('Incorrect email or password. If you are the admin, make sure the admin user exists in the database.')
+        setError(t.login.incorrectCredentials)
         setIsLoading(false)
       }
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || 'An error occurred. Please try again.'
+      const errorMessage = error.response?.data?.error || t.login.errorOccurred
       setError(errorMessage)
       setIsLoading(false)
     }
@@ -60,7 +62,7 @@ export default function LoginPage() {
       setIsLoading(true)
       await signIn('google', { callbackUrl: '/shop' })
     } catch (error) {
-      toast.error('Failed to sign in with Google')
+      toast.error(t.login.googleSignInFailed)
       setIsLoading(false)
     }
   }
@@ -70,28 +72,28 @@ export default function LoginPage() {
       <div className="max-w-sm w-full backdrop-blur-xl bg-white/60 rounded-3xl shadow-xl border border-gray-200/50 p-8 space-y-6">
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-semibold text-primary-800 tracking-tight">
-            Sign in
+            {t.login.title}
           </h1>
-          <p className="text-xs text-gray-500">Welcome to HomeDecor</p>
+          <p className="text-xs text-gray-500">{t.login.welcome}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <Input
             type="email"
-            label="Email"
+            label={t.login.email}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="your@email.com"
+            placeholder={t.login.emailPlaceholder}
             required
             className="group"
           />
 
           <Input
             type="password"
-            label="Password"
+            label={t.login.password}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
+            placeholder={t.login.passwordPlaceholder}
             required
             className="group"
           />
@@ -103,7 +105,7 @@ export default function LoginPage() {
           )}
 
           <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
-            {isLoading ? 'Signing in...' : 'Sign in'}
+            {isLoading ? t.login.signingIn : t.login.signIn}
           </Button>
         </form>
 
@@ -112,7 +114,7 @@ export default function LoginPage() {
             <div className="w-full border-t border-gray-200"></div>
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="px-2 bg-white/60 text-gray-500">Or continue with</span>
+            <span className="px-2 bg-white/60 text-gray-500">{t.login.orContinueWith}</span>
           </div>
         </div>
 
@@ -140,13 +142,13 @@ export default function LoginPage() {
               d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
             />
           </svg>
-          <span>Sign in with Google</span>
+          <span>{t.login.signInWithGoogle}</span>
         </button>
 
         <p className="text-center text-xs text-gray-500">
-          Don't have an account?{' '}
+          {t.login.noAccount}{' '}
           <Link href="/auth/register" className="text-accent-500 font-medium hover:text-accent-600 transition-colors">
-            Register here
+            {t.login.registerHere}
           </Link>
         </p>
 

@@ -1,8 +1,12 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import Button from './Button'
+import { useLanguage } from '@/context/LanguageContext'
 
 export default function HeroSection() {
+  const { t } = useLanguage()
   return (
     <section className="relative mt-14 min-h-[500px] md:min-h-[550px] flex items-center overflow-hidden">
       {/* Imagen de fondo */}
@@ -22,23 +26,22 @@ export default function HeroSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 md:py-20">
         <div className="max-w-2xl">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white mb-4 leading-tight tracking-tight">
-            Bring light, comfort, and style
+            {t.hero.title}
             <br />
-            <span className="text-accent-200">to every room</span>
+            <span className="text-accent-200">{t.hero.titleHighlight}</span>
           </h1>
           <p className="text-sm md:text-base text-gray-100 mb-6 max-w-xl">
-            Discover our curated collection of modern furniture and accessories
-            designed to transform your living spaces into havens of comfort and style.
+            {t.hero.description}
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link href="/shop">
               <Button size="lg" className="bg-accent-400 hover:bg-accent-500 text-white border-0">
-                Shop now
+                {t.hero.shopNow}
               </Button>
             </Link>
             <Link href="/shop">
               <Button variant="outline" size="lg" className="border border-white/80 text-white hover:bg-white/10 backdrop-blur-sm">
-                Explore collection
+                {t.hero.exploreCollection}
               </Button>
             </Link>
           </div>

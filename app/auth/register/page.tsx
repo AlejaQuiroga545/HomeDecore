@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { useAuth } from '@/context/AuthContext'
+import { useLanguage } from '@/context/LanguageContext'
 import Input from '@/components/Input'
 import Button from '@/components/Button'
 import Link from 'next/link'
@@ -12,6 +13,7 @@ import { toast } from 'react-toastify'
 export default function RegisterPage() {
   const router = useRouter()
   const { register } = useAuth()
+  const { t } = useLanguage()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -26,14 +28,14 @@ export default function RegisterPage() {
 
     // Validate fields
     if (!name || !email || !password) {
-      setError('Please fill in all fields')
+      setError(t.register.fillAllFields)
       setIsLoading(false)
       return
     }
 
     // Validate password length
     if (password.length < 6) {
-      setError('Password must be at least 6 characters')
+      setError(t.register.passwordMinLength)
       setIsLoading(false)
       return
     }
@@ -41,16 +43,16 @@ export default function RegisterPage() {
     try {
       const success = await register(name, email, password)
       if (success) {
-        toast.success('Registration successful', {
+        toast.success(t.register.registrationSuccessful, {
           position: 'top-right',
           autoClose: 2000,
         })
         router.push('/shop')
       } else {
-        setError('This email is already registered')
+        setError(t.register.emailAlreadyRegistered)
       }
     } catch (error) {
-      setError('An error occurred. Please try again.')
+      setError(t.register.errorOccurred)
     } finally {
       setIsLoading(false)
     }
@@ -62,7 +64,7 @@ export default function RegisterPage() {
       setIsLoading(true)
       await signIn('google', { callbackUrl: '/shop' })
     } catch (error) {
-      toast.error('Failed to sign in with Google')
+      toast.error(t.register.googleSignInFailed)
       setIsLoading(false)
     }
   }
@@ -73,39 +75,39 @@ export default function RegisterPage() {
         {/* Title */}
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-semibold text-primary-800 tracking-tight">
-            Create account
+            {t.register.title}
           </h1>
-          <p className="text-xs text-gray-500">Join us today</p>
+          <p className="text-xs text-gray-500">{t.register.joinUs}</p>
         </div>
 
         {/* Registration form */}
         <form onSubmit={handleSubmit} className="space-y-5">
           <Input
             type="text"
-            label="Name"
+            label={t.register.name}
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Your name"
+            placeholder={t.register.namePlaceholder}
             required
             className="group"
           />
 
           <Input
             type="email"
-            label="Email"
+            label={t.register.email}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="your@email.com"
+            placeholder={t.register.emailPlaceholder}
             required
             className="group"
           />
 
           <Input
             type="password"
-            label="Password"
+            label={t.register.password}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
+            placeholder={t.register.passwordPlaceholder}
             required
             className="group"
           />
@@ -118,7 +120,7 @@ export default function RegisterPage() {
           )}
 
           <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
-            {isLoading ? 'Registering...' : 'Register'}
+            {isLoading ? t.register.registering : t.register.register}
           </Button>
         </form>
 
@@ -128,7 +130,7 @@ export default function RegisterPage() {
             <div className="w-full border-t border-gray-200"></div>
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="px-2 bg-white/60 text-gray-500">Or continue with</span>
+            <span className="px-2 bg-white/60 text-gray-500">{t.register.orContinueWith}</span>
           </div>
         </div>
 
@@ -157,14 +159,14 @@ export default function RegisterPage() {
               d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
             />
           </svg>
-          <span>Sign up with Google</span>
+          <span>{t.register.signUpWithGoogle}</span>
         </button>
 
         {/* Link to login */}
         <p className="text-center text-xs text-gray-500">
-          Already have an account?{' '}
+          {t.register.haveAccount}{' '}
           <Link href="/auth/login" className="text-accent-500 font-medium hover:text-accent-600 transition-colors">
-            Sign in here
+            {t.register.signInHere}
           </Link>
         </p>
       </div>

@@ -1,20 +1,23 @@
 'use client'
 
 import { useCart } from '@/context/CartContext'
+import { useLanguage } from '@/context/LanguageContext'
+import { translateProductName } from '@/lib/translations'
 import Image from 'next/image'
 import { TrashIcon } from '@heroicons/react/24/outline'
 import { formatPrice } from '@/lib/utils'
 
 export default function CartSummary() {
   const { cart, removeFromCart, updateQuantity, getTotal } = useCart()
+  const { language, t } = useLanguage()
 
   // If cart is empty
   if (cart.length === 0) {
     return (
       <div className="text-center py-10">
-        <p className="text-gray-600 text-sm mb-3">Your cart is empty</p>
+        <p className="text-gray-600 text-sm mb-3">{t.cartSummary.empty}</p>
         <a href="/shop" className="text-accent-500 hover:text-accent-600 text-xs font-medium transition-colors">
-          Continue shopping
+          {t.cartSummary.continueShopping}
         </a>
       </div>
     )
@@ -32,7 +35,7 @@ export default function CartSummary() {
           <div className="relative w-full sm:w-24 h-24 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0">
             <Image
               src={item.image}
-              alt={item.name}
+              alt={translateProductName(item.name, language)}
               fill
               className="object-cover"
               sizes="96px"
@@ -41,7 +44,7 @@ export default function CartSummary() {
           {/* Information and controls */}
           <div className="flex-1 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex-1">
-              <h3 className="text-sm font-medium text-primary-800 mb-1">{item.name}</h3>
+              <h3 className="text-sm font-medium text-primary-800 mb-1">{translateProductName(item.name, language)}</h3>
               <p className="text-xs text-gray-600">{formatPrice(item.price)}</p>
             </div>
             <div className="flex items-center gap-3">
@@ -82,7 +85,7 @@ export default function CartSummary() {
       {/* Cart total */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 p-5 mt-6">
         <div className="flex justify-between items-center">
-          <span className="text-base font-semibold text-primary-800">Total:</span>
+          <span className="text-base font-semibold text-primary-800">{t.cartSummary.total}</span>
           <span className="text-xl font-bold text-primary-700">
             {formatPrice(getTotal())}
           </span>

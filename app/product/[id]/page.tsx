@@ -4,6 +4,8 @@ import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useProducts, Product } from '@/context/ProductsContext'
 import { useCart } from '@/context/CartContext'
+import { useLanguage } from '@/context/LanguageContext'
+import { translateCategory, translateProductName } from '@/lib/translations'
 import Image from 'next/image'
 import Button from '@/components/Button'
 import { toast } from 'react-toastify'
@@ -15,6 +17,7 @@ export default function ProductDetailPage() {
   const router = useRouter()
   const { getProductById, loading } = useProducts()
   const { addToCart } = useCart()
+  const { language, t } = useLanguage()
   const [product, setProduct] = useState<Product | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -53,7 +56,7 @@ export default function ProductDetailPage() {
   if (isLoading) {
     return (
       <div className="pt-14 pb-12 min-h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center">
-        <p className="text-gray-600 text-sm">Loading...</p>
+        <p className="text-gray-600 text-sm">{t.product.loading}</p>
       </div>
     )
   }
@@ -64,12 +67,12 @@ export default function ProductDetailPage() {
       <div className="pt-20 pb-12 min-h-screen bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-12">
           <h1 className="text-2xl font-semibold text-primary-800 mb-3 tracking-tight">
-            Product not found
+            {t.product.notFound}
           </h1>
           <p className="text-gray-600 mb-6 text-sm">
-            The product you're looking for doesn't exist or has been removed.
+            {t.product.notFoundDescription}
           </p>
-          <Button onClick={() => router.push('/shop')}>Back to shop</Button>
+          <Button onClick={() => router.push('/shop')}>{t.product.backToShop}</Button>
         </div>
       </div>
     )
@@ -77,13 +80,14 @@ export default function ProductDetailPage() {
 
   // Add to cart
   const handleAddToCart = () => {
+    const translatedName = translateProductName(product.name, language)
     addToCart({
       id: product.id,
-      name: product.name,
+      name: product.name, // Keep original name for cart/backend
       price: product.price,
       image: product.image,
     })
-    toast.success(`${product.name} added to cart`, {
+    toast.success(`${translatedName} ${t.cart.addedToCart}`, {
       position: 'top-right',
       autoClose: 2000,
     })
@@ -98,7 +102,7 @@ export default function ProductDetailPage() {
             <div className="relative w-full h-80 md:h-[450px] bg-gray-50 rounded-2xl overflow-hidden">
               <Image
                 src={product.image}
-                alt={product.name}
+                alt={translateProductName(product.name, language)}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -108,10 +112,10 @@ export default function ProductDetailPage() {
             {/* Product information */}
             <div className="flex flex-col justify-center space-y-4">
               <h1 className="text-2xl md:text-3xl font-semibold text-primary-800 mb-2 tracking-tight">
-                {product.name}
+                {translateProductName(product.name, language)}
               </h1>
               <p className="text-sm text-gray-600">
-                Category: <span className="font-medium text-primary-700">{product.category}</span>
+                {t.product.category} <span className="font-medium text-primary-700">{translateCategory(product.category, language)}</span>
               </p>
               <p className="text-2xl font-bold text-primary-700">
                 {formatPrice(product.price)}
@@ -120,7 +124,7 @@ export default function ProductDetailPage() {
                 {product.description}
               </p>
               <Button onClick={handleAddToCart} size="lg" className="w-full md:w-auto mt-4">
-                Add to cart
+                {t.product.addToCart}
               </Button>
             </div>
           </div>

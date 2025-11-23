@@ -7,6 +7,7 @@ interface Product {
   name: string
   price: number
   image: string
+  originalName?: string // Original name for cart/backend
 }
 
 interface ProductGridProps {
@@ -31,6 +32,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
           key={product.id}
           id={product.id}
           name={product.name}
+          originalName={product.originalName || product.name}
           price={product.price}
           image={product.image}
         />

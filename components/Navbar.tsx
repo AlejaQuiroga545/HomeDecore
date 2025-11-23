@@ -5,13 +5,18 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useCart } from '@/context/CartContext'
 import { useAuth } from '@/context/AuthContext'
-import { ShoppingCartIcon, UserIcon, MagnifyingGlassIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'
+import { useLanguage } from '@/context/LanguageContext'
+import { useProducts } from '@/context/ProductsContext'
+import { getSearchableText } from '@/lib/translations'
+import { ShoppingCartIcon, UserIcon, MagnifyingGlassIcon, ArrowRightOnRectangleIcon, LanguageIcon } from '@heroicons/react/24/outline'
 
 export default function Navbar() {
   const pathname = usePathname()
   const router = useRouter()
   const { getItemCount } = useCart()
   const { user, logout, isAdmin } = useAuth()
+  const { language, setLanguage, t } = useLanguage()
+  const { products } = useProducts()
   const itemCount = getItemCount()
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -19,7 +24,7 @@ export default function Navbar() {
   const isActive = (path: string) => pathname === path
   const isAdminUser = isAdmin()
 
-  // Search products
+  // Search products - works in both languages
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchTerm.trim()) {
@@ -37,13 +42,27 @@ export default function Navbar() {
             <Link href="/dashboard" className="flex items-center">
               <span className="text-lg font-semibold text-primary-800 tracking-tight">HomeDecor</span>
             </Link>
-            <button
-              onClick={logout}
-              className="px-4 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
-            >
-              <ArrowRightOnRectangleIcon className="w-4 h-4" />
-              Logout
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  logout()
+                  router.push('/shop')
+                }}
+                className="px-4 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
+              >
+                <ArrowRightOnRectangleIcon className="w-4 h-4" />
+                {t.navbar.logout}
+              </button>
+              {/* Language Toggle - Last */}
+              <button
+                onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
+                className="px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
+                title={language === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+              >
+                <LanguageIcon className="w-4 h-4" />
+                <span>{language === 'es' ? 'EN' : 'ES'}</span>
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -66,7 +85,7 @@ export default function Navbar() {
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder={t.navbar.searchPlaceholder}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-9 pr-4 py-1.5 rounded-full border border-gray-200 focus:border-accent-300 focus:ring-1 focus:ring-accent-200 focus:outline-none bg-white/60 backdrop-blur-sm text-primary-800 text-xs placeholder-gray-400 transition-all"
@@ -84,7 +103,7 @@ export default function Navbar() {
                   : 'text-primary-700 hover:text-accent-500 hover:bg-primary-50/50'
               }`}
             >
-              Home
+              {t.navbar.home}
             </Link>
             <Link
               href="/shop"
@@ -94,17 +113,7 @@ export default function Navbar() {
                   : 'text-primary-700 hover:text-accent-500 hover:bg-primary-50/50'
               }`}
             >
-              Shop
-            </Link>
-            <Link
-              href="/about"
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                isActive('/about')
-                  ? 'text-accent-500 bg-accent-50'
-                  : 'text-primary-700 hover:text-accent-500 hover:bg-primary-50/50'
-              }`}
-            >
-              About
+              {t.navbar.shop}
             </Link>
             <Link
               href="/contact"
@@ -114,7 +123,7 @@ export default function Navbar() {
                   : 'text-primary-700 hover:text-accent-500 hover:bg-primary-50/50'
               }`}
             >
-              Contact
+              {t.navbar.contact}
             </Link>
           </div>
 
@@ -128,15 +137,18 @@ export default function Navbar() {
                   className="px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all flex items-center gap-1.5"
                 >
                   <UserIcon className="w-4 h-4" />
-                  <span className="hidden sm:inline">Profile</span>
+                  <span className="hidden sm:inline">{t.navbar.profile}</span>
                 </Link>
                 {/* Logout */}
                 <button
-                  onClick={logout}
+                  onClick={() => {
+                    logout()
+                    router.push('/shop')
+                  }}
                   className="px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all flex items-center gap-1.5"
                 >
                   <ArrowRightOnRectangleIcon className="w-4 h-4" />
-                  <span className="hidden sm:inline">Logout</span>
+                  <span className="hidden sm:inline">{t.navbar.logout}</span>
                 </button>
                 {/* Cart */}
                 <Link
@@ -150,6 +162,15 @@ export default function Navbar() {
                     </span>
                   )}
                 </Link>
+                {/* Language Toggle - Last */}
+                <button
+                  onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
+                  className="px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
+                  title={language === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+                >
+                  <LanguageIcon className="w-4 h-4" />
+                  <span className="hidden sm:inline">{language === 'es' ? 'EN' : 'ES'}</span>
+                </button>
               </>
             ) : (
               <>
@@ -159,15 +180,24 @@ export default function Navbar() {
                   className="px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all flex items-center gap-1.5"
                 >
                   <UserIcon className="w-4 h-4" />
-                  <span className="hidden sm:inline">Login</span>
+                  <span className="hidden sm:inline">{t.navbar.login}</span>
                 </Link>
                 {/* Register */}
                 <Link
                   href="/auth/register"
                   className="px-4 py-1.5 rounded-full text-xs font-medium bg-accent-400 text-white hover:bg-accent-500 transition-all shadow-sm hover:shadow-md"
                 >
-                  Register
+                  {t.navbar.register}
                 </Link>
+                {/* Language Toggle - Last */}
+                <button
+                  onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
+                  className="px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
+                  title={language === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+                >
+                  <LanguageIcon className="w-4 h-4" />
+                  <span className="hidden sm:inline">{language === 'es' ? 'EN' : 'ES'}</span>
+                </button>
               </>
             )}
           </div>

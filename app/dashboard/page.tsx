@@ -3,6 +3,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
+import { useLanguage } from '@/context/LanguageContext'
+import { translateCategory, translateProductName, getSearchableText } from '@/lib/translations'
 import { useProducts, Product } from '@/context/ProductsContext'
 import ProductModal from '@/components/ProductModal'
 import Pagination from '@/components/Pagination'
@@ -24,6 +26,7 @@ const ITEMS_PER_PAGE = 12
 export default function DashboardPage() {
   const router = useRouter()
   const { isAdmin } = useAuth()
+  const { language, t } = useLanguage()
   const { products, addProduct, updateProduct, deleteProduct } = useProducts()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
@@ -49,9 +52,14 @@ export default function DashboardPage() {
   // Filter products
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
+      // Search in name (both languages) and description
+      const searchLower = searchTerm.toLowerCase()
+      const searchableText = getSearchableText(product.name)
       const matchesSearch =
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+        searchableText.en.includes(searchLower) ||
+        searchableText.es.includes(searchLower) ||
+        product.name.toLowerCase().includes(searchLower) ||
+        product.description.toLowerCase().includes(searchLower)
       const matchesCategory =
         selectedCategory === 'All' || product.category === selectedCategory
       return matchesSearch && matchesCategory
@@ -68,24 +76,24 @@ export default function DashboardPage() {
   // Delete product
   const handleDelete = (id: string, name: string) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: `Do you want to delete "${name}"?`,
+      title: t.dashboard.deleteConfirm,
+      text: `${t.dashboard.deleteConfirmText} "${name}"?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#C263F9',
-      confirmButtonText: 'Yes, delete',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: t.dashboard.yesDelete,
+      cancelButtonText: t.common.cancel,
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           await deleteProduct(id)
-          toast.success('Product deleted successfully', {
+          toast.success(t.dashboard.productDeleted, {
             position: 'top-right',
             autoClose: 2000,
           })
         } catch (error) {
-          toast.error('Failed to delete product', {
+          toast.error(t.dashboard.deleteFailed, {
             position: 'top-right',
             autoClose: 2000,
           })
@@ -111,13 +119,13 @@ export default function DashboardPage() {
     try {
       if (editingProduct) {
         await updateProduct(editingProduct.id, productData)
-        toast.success('Product updated successfully', {
+        toast.success(t.dashboard.productUpdated, {
           position: 'top-right',
           autoClose: 2000,
         })
       } else {
         await addProduct(productData)
-        toast.success('Product added successfully', {
+        toast.success(t.dashboard.productAdded, {
           position: 'top-right',
           autoClose: 2000,
         })
@@ -125,7 +133,7 @@ export default function DashboardPage() {
       setIsModalOpen(false)
       setEditingProduct(null)
     } catch (error) {
-      toast.error('Failed to save product', {
+      toast.error(t.dashboard.saveFailed, {
         position: 'top-right',
         autoClose: 2000,
       })
@@ -161,14 +169,14 @@ export default function DashboardPage() {
             }`}
           >
             <Squares2X2Icon className="w-4 h-4" />
-            <span>Products</span>
+            <span>{t.dashboard.products}</span>
           </button>
           <button
             onClick={() => handleAddNew()}
             className="w-full flex items-center gap-3 px-3 py-2 rounded-full text-xs font-medium text-primary-700 hover:bg-accent-50 hover:text-accent-500 transition-all"
           >
             <PlusIcon className="w-4 h-4" />
-            <span>Add product</span>
+            <span>{t.dashboard.addProduct}</span>
           </button>
           <button
             onClick={() => setActiveMenu('settings')}
@@ -179,7 +187,7 @@ export default function DashboardPage() {
             }`}
           >
             <Cog6ToothIcon className="w-4 h-4" />
-            <span>Settings</span>
+            <span>{t.dashboard.settings}</span>
           </button>
         </nav>
       </aside>
@@ -187,7 +195,7 @@ export default function DashboardPage() {
       {/* Main content */}
       <main className="flex-1 ml-56 p-6">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl font-semibold text-primary-800 mb-6 tracking-tight">Dashboard</h1>
+          <h1 className="text-2xl font-semibold text-primary-800 mb-6 tracking-tight">{t.dashboard.title}</h1>
 
           {/* Products view */}
           {activeMenu === 'products' && (
@@ -200,7 +208,7 @@ export default function DashboardPage() {
                     <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <input
                       type="text"
-                      placeholder="Search products..."
+                      placeholder={t.dashboard.searchPlaceholder}
                       value={searchTerm}
                       onChange={(e) => {
                         setSearchTerm(e.target.value)
@@ -225,7 +233,7 @@ export default function DashboardPage() {
                             : 'bg-white/80 backdrop-blur-sm text-primary-700 hover:bg-accent-50 hover:text-accent-500 border border-gray-200/50'
                         }`}
                       >
-                        {category}
+                        {category === 'All' ? t.dashboard.all : translateCategory(category, language)}
                       </button>
                     ))}
                   </div>
@@ -238,12 +246,12 @@ export default function DashboardPage() {
                   <table className="w-full table-fixed">
                     <thead className="bg-gray-50/50 border-b border-gray-200">
                       <tr>
-                        <th className="w-16 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">Image</th>
-                        <th className="w-32 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">Name</th>
-                        <th className="w-28 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">Category</th>
-                        <th className="w-32 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">Price</th>
-                        <th className="w-24 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">Stock</th>
-                        <th className="w-24 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">Actions</th>
+                        <th className="w-16 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.image}</th>
+                        <th className="w-32 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.name}</th>
+                        <th className="w-28 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.category}</th>
+                        <th className="w-32 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.price}</th>
+                        <th className="w-24 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.stock}</th>
+                        <th className="w-24 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.actions}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200/50">
@@ -255,7 +263,7 @@ export default function DashboardPage() {
                               <div className="relative w-12 h-12 rounded-lg bg-gray-50 overflow-hidden">
                                 <Image
                                   src={product.image}
-                                  alt={product.name}
+                                  alt={translateProductName(product.name, language)}
                                   fill
                                   className="object-cover"
                                   sizes="48px"
@@ -263,13 +271,13 @@ export default function DashboardPage() {
                               </div>
                             </td>
                             <td className="px-3 py-3">
-                              <p className="text-sm font-medium text-primary-800 truncate" title={product.name}>
-                                {product.name}
+                              <p className="text-sm font-medium text-primary-800 truncate" title={translateProductName(product.name, language)}>
+                                {translateProductName(product.name, language)}
                               </p>
                             </td>
                             <td className="px-3 py-3">
                               <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${categoryColor.bg} ${categoryColor.text} border-2 ${categoryColor.border} shadow-sm`}>
-                                {product.category}
+                                {translateCategory(product.category, language)}
                               </span>
                             </td>
                             <td className="px-3 py-3">
@@ -285,14 +293,14 @@ export default function DashboardPage() {
                                 <button
                                   onClick={() => handleEdit(product)}
                                   className="p-1.5 rounded-full text-accent-500 hover:bg-accent-50 transition-all"
-                                  title="Edit"
+                                  title={t.dashboard.edit}
                                 >
                                   <PencilIcon className="w-4 h-4" />
                                 </button>
                                 <button
-                                  onClick={() => handleDelete(product.id, product.name)}
+                                  onClick={() => handleDelete(product.id, translateProductName(product.name, language))}
                                   className="p-1.5 rounded-full text-red-500 hover:bg-red-50 transition-all"
-                                  title="Delete"
+                                  title={t.dashboard.delete}
                                 >
                                   <TrashIcon className="w-4 h-4" />
                                 </button>
@@ -309,7 +317,7 @@ export default function DashboardPage() {
               {/* Message if no products */}
               {paginatedProducts.length === 0 && (
                 <div className="text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50">
-                  <p className="text-gray-600 text-sm">No products found.</p>
+                  <p className="text-gray-600 text-sm">{t.dashboard.noProductsFound}</p>
                 </div>
               )}
 
@@ -327,8 +335,8 @@ export default function DashboardPage() {
           {/* Settings view */}
           {activeMenu === 'settings' && (
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 p-6">
-              <h2 className="text-lg font-semibold text-primary-800 mb-3 tracking-tight">Settings</h2>
-              <p className="text-gray-600 text-sm">Settings panel coming soon.</p>
+              <h2 className="text-lg font-semibold text-primary-800 mb-3 tracking-tight">{t.dashboard.settings}</h2>
+              <p className="text-gray-600 text-sm">{t.dashboard.settingsComingSoon}</p>
             </div>
           )}
         </div>

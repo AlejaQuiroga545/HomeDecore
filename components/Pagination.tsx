@@ -1,5 +1,7 @@
 'use client'
 
+import { useLanguage } from '@/context/LanguageContext'
+
 interface PaginationProps {
   currentPage: number
   totalPages: number
@@ -12,6 +14,7 @@ export default function Pagination({
   totalPages,
   onPageChange,
 }: PaginationProps) {
+  const { t } = useLanguage()
   // Create array of page numbers
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
 
@@ -27,7 +30,7 @@ export default function Pagination({
             : 'bg-white/80 backdrop-blur-sm text-primary-700 hover:bg-accent-50 hover:text-accent-500 border border-gray-200/50'
         }`}
       >
-        Previous
+        {t.pagination.previous}
       </button>
 
       {/* Page numbers */}
@@ -55,7 +58,7 @@ export default function Pagination({
             : 'bg-white/80 backdrop-blur-sm text-primary-700 hover:bg-accent-50 hover:text-accent-500 border border-gray-200/50'
         }`}
       >
-        Next
+        {t.pagination.next}
       </button>
     </div>
   )

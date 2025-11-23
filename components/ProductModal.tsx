@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useLanguage } from '@/context/LanguageContext'
 import Input from './Input'
 import Button from './Button'
 import { Product } from '@/context/ProductsContext'
@@ -16,6 +17,7 @@ interface ProductModalProps {
 }
 
 export default function ProductModal({ isOpen, onClose, onSave, editingProduct }: ProductModalProps) {
+  const { t } = useLanguage()
   // Form states
   const [formData, setFormData] = useState({
     name: '',
@@ -77,13 +79,13 @@ export default function ProductModal({ isOpen, onClose, onSave, editingProduct }
 
     // Validate required fields
     if (!formData.name || !formData.price) {
-      toast.error('Please fill in all required fields')
+      toast.error(t.productModal.fillRequiredFields)
       return
     }
 
     // Validate that there's an image
     if (!imageFile && !editingProduct) {
-      toast.error('You must select an image')
+      toast.error(t.productModal.selectImage)
       return
     }
 
@@ -114,7 +116,7 @@ export default function ProductModal({ isOpen, onClose, onSave, editingProduct }
       })
       onClose()
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || error.message || 'Error saving product'
+      const errorMessage = error.response?.data?.error || error.message || t.productModal.errorSaving
       toast.error(errorMessage)
       console.error('Error saving product:', error)
     } finally {
@@ -129,19 +131,19 @@ export default function ProductModal({ isOpen, onClose, onSave, editingProduct }
       <div className="bg-white rounded-lg shadow-xl w-full max-w-5xl max-h-[90vh] overflow-y-auto m-4">
         <div className="p-6">
           <h2 className="text-2xl font-bold text-brown-800 mb-4">
-            {editingProduct ? 'Edit Product' : 'Add new product'}
+            {editingProduct ? t.productModal.editProduct : t.productModal.addNewProduct}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name and category */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
-                label="Name"
+                label={t.productModal.name}
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
               />
               <Input
-                label="Category"
+                label={t.productModal.category}
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                 required
@@ -150,7 +152,7 @@ export default function ProductModal({ isOpen, onClose, onSave, editingProduct }
 
             {/* Description */}
             <Input
-              label="Description"
+              label={t.productModal.description}
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               required
@@ -160,7 +162,7 @@ export default function ProductModal({ isOpen, onClose, onSave, editingProduct }
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Input
                 type="number"
-                label="Price (COP)"
+                label={t.productModal.price}
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                 step="1"
@@ -169,7 +171,7 @@ export default function ProductModal({ isOpen, onClose, onSave, editingProduct }
               />
               <Input
                 type="number"
-                label="Stock"
+                label={t.productModal.stock}
                 value={formData.stock}
                 onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
                 min="0"
@@ -178,7 +180,7 @@ export default function ProductModal({ isOpen, onClose, onSave, editingProduct }
               {/* Image upload */}
               <div className="w-full space-y-3">
                 <label className="block text-xs font-medium text-primary-600 mb-1.5 tracking-wide">
-                  Image
+                  {t.productModal.image}
                 </label>
                 <input
                   type="file"
@@ -187,7 +189,7 @@ export default function ProductModal({ isOpen, onClose, onSave, editingProduct }
                   className="w-full text-xs text-gray-600 file:mr-4 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-medium file:bg-accent-50 file:text-accent-600 hover:file:bg-accent-100"
                 />
                 {imageFile && (
-                  <p className="mt-1 text-xs text-gray-500">Selected file: {imageFile.name}</p>
+                  <p className="mt-1 text-xs text-gray-500">{t.productModal.selectedFile} {imageFile.name}</p>
                 )}
                 {/* Image preview */}
                 {imagePreview && (
@@ -207,10 +209,10 @@ export default function ProductModal({ isOpen, onClose, onSave, editingProduct }
             {/* Buttons */}
             <div className="flex gap-4 pt-4">
               <Button type="submit" className="flex-1" disabled={isUploading}>
-                {isUploading ? 'Uploading...' : editingProduct ? 'Update' : 'Add'} Product
+                {isUploading ? t.productModal.uploading : editingProduct ? `${t.productModal.update} ${t.dashboard.products}` : `${t.productModal.add} ${t.dashboard.products}`}
               </Button>
               <Button type="button" variant="outline" onClick={onClose} className="flex-1" disabled={isUploading}>
-                Cancel
+                {t.productModal.cancel}
               </Button>
             </div>
           </form>
