@@ -58,9 +58,9 @@ export default function ContactPage() {
           <p className="text-gray-600 text-sm">{t.contact.subtitle}</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Form - Left Side */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 p-6">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-gray-200/50 p-4 sm:p-6">
             <form onSubmit={handleSubmit} className="space-y-5">
               <Input
                 label={t.contact.name}
@@ -104,7 +104,7 @@ export default function ContactPage() {
           </div>
 
           {/* Contact Info - Right Side */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 p-6 space-y-6">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-gray-200/50 p-4 sm:p-6 space-y-4 sm:space-y-6">
             <div>
               <h3 className="text-base font-semibold text-primary-800 mb-4 tracking-tight">{t.contact.contactInfo}</h3>
               <div className="space-y-4">

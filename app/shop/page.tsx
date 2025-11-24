@@ -93,7 +93,7 @@ export default function ShopPage() {
           </div>
 
           {/* Category buttons */}
-          <div className="flex flex-wrap gap-2 justify-center">
+          <div className="flex flex-wrap gap-2 justify-center px-2">
             {categories.map((category) => (
               <button
                 key={category}

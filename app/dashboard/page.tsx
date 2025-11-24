@@ -16,7 +16,9 @@ import {
   MagnifyingGlassIcon,
   PlusIcon,
   Cog6ToothIcon,
-  Squares2X2Icon
+  Squares2X2Icon,
+  Bars3Icon,
+  XMarkIcon
 } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import { formatPrice } from '@/lib/utils'
@@ -34,6 +36,7 @@ export default function DashboardPage() {
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [currentPage, setCurrentPage] = useState(1)
   const [activeMenu, setActiveMenu] = useState('products')
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   // Check if user is admin
   useEffect(() => {
@@ -157,11 +160,36 @@ export default function DashboardPage() {
 
   return (
     <div className="pt-14 min-h-screen bg-gradient-to-b from-white to-gray-50 flex">
+      {/* Mobile sidebar overlay */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar menu */}
-      <aside className="w-56 bg-white/80 backdrop-blur-sm shadow-sm border-r border-gray-200/50 fixed left-0 top-14 h-[calc(100vh-3.5rem)] overflow-y-auto">
+      <aside
+        className={`fixed lg:static left-0 top-14 z-50 w-64 lg:w-56 bg-white/95 lg:bg-white/80 backdrop-blur-xl lg:backdrop-blur-sm shadow-xl lg:shadow-sm border-r border-gray-200/50 h-[calc(100vh-3.5rem)] overflow-y-auto transition-transform duration-300 ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}
+      >
         <nav className="p-4 space-y-2">
+          {/* Close button for mobile */}
+          <div className="flex items-center justify-between mb-4 lg:hidden">
+            <h2 className="text-sm font-semibold text-primary-800">Menu</h2>
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="p-2 rounded-full text-primary-700 hover:bg-primary-50 transition-all"
+            >
+              <XMarkIcon className="w-5 h-5" />
+            </button>
+          </div>
           <button
-            onClick={() => setActiveMenu('products')}
+            onClick={() => {
+              setActiveMenu('products')
+              setIsSidebarOpen(false)
+            }}
             className={`w-full flex items-center gap-3 px-3 py-2 rounded-full text-xs font-medium transition-all ${
               activeMenu === 'products'
                 ? 'bg-accent-400 text-white shadow-sm'
@@ -172,14 +200,20 @@ export default function DashboardPage() {
             <span>{t.dashboard.products}</span>
           </button>
           <button
-            onClick={() => handleAddNew()}
+            onClick={() => {
+              handleAddNew()
+              setIsSidebarOpen(false)
+            }}
             className="w-full flex items-center gap-3 px-3 py-2 rounded-full text-xs font-medium text-primary-700 hover:bg-accent-50 hover:text-accent-500 transition-all"
           >
             <PlusIcon className="w-4 h-4" />
             <span>{t.dashboard.addProduct}</span>
           </button>
           <button
-            onClick={() => setActiveMenu('settings')}
+            onClick={() => {
+              setActiveMenu('settings')
+              setIsSidebarOpen(false)
+            }}
             className={`w-full flex items-center gap-3 px-3 py-2 rounded-full text-xs font-medium transition-all ${
               activeMenu === 'settings'
                 ? 'bg-accent-400 text-white shadow-sm'
@@ -193,9 +227,21 @@ export default function DashboardPage() {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 ml-56 p-6">
+      <main className="flex-1 lg:ml-56 p-4 sm:p-6">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl font-semibold text-primary-800 mb-6 tracking-tight">{t.dashboard.title}</h1>
+          {/* Mobile header with menu button */}
+          <div className="flex items-center justify-between mb-6 lg:hidden">
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="p-2 rounded-full text-primary-700 hover:bg-primary-50 transition-all"
+              aria-label="Open menu"
+            >
+              <Bars3Icon className="w-6 h-6" />
+            </button>
+            <h1 className="text-xl font-semibold text-primary-800 tracking-tight">{t.dashboard.title}</h1>
+            <div className="w-10" /> {/* Spacer for centering */}
+          </div>
+          <h1 className="hidden lg:block text-2xl font-semibold text-primary-800 mb-6 tracking-tight">{t.dashboard.title}</h1>
 
           {/* Products view */}
           {activeMenu === 'products' && (
@@ -242,16 +288,17 @@ export default function DashboardPage() {
 
               {/* Products table */}
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 overflow-hidden mb-6">
-                <div className="overflow-x-auto">
-                  <table className="w-full table-fixed">
+                <div className="overflow-x-auto -mx-4 sm:mx-0">
+                  <div className="inline-block min-w-full align-middle">
+                    <table className="min-w-full table-fixed divide-y divide-gray-200/50">
                     <thead className="bg-gray-50/50 border-b border-gray-200">
                       <tr>
-                        <th className="w-16 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.image}</th>
-                        <th className="w-32 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.name}</th>
-                        <th className="w-28 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.category}</th>
-                        <th className="w-32 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.price}</th>
-                        <th className="w-24 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.stock}</th>
-                        <th className="w-24 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.actions}</th>
+                        <th className="w-16 sm:w-20 px-2 sm:px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.image}</th>
+                        <th className="w-24 sm:w-32 px-2 sm:px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.name}</th>
+                        <th className="hidden sm:table-cell w-28 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.category}</th>
+                        <th className="w-20 sm:w-32 px-2 sm:px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.price}</th>
+                        <th className="hidden md:table-cell w-24 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.stock}</th>
+                        <th className="w-20 sm:w-24 px-2 sm:px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.actions}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200/50">
@@ -259,8 +306,8 @@ export default function DashboardPage() {
                         const categoryColor = getCategoryColor(product.category)
                         return (
                           <tr key={product.id} className="hover:bg-gray-50/50 transition-colors">
-                            <td className="px-3 py-3">
-                              <div className="relative w-12 h-12 rounded-lg bg-gray-50 overflow-hidden">
+                            <td className="px-2 sm:px-3 py-3">
+                              <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gray-50 overflow-hidden">
                                 <Image
                                   src={product.image}
                                   alt={translateProductName(product.name, language)}
@@ -270,39 +317,43 @@ export default function DashboardPage() {
                                 />
                               </div>
                             </td>
-                            <td className="px-3 py-3">
-                              <p className="text-sm font-medium text-primary-800 truncate" title={translateProductName(product.name, language)}>
+                            <td className="px-2 sm:px-3 py-3">
+                              <p className="text-xs sm:text-sm font-medium text-primary-800 truncate" title={translateProductName(product.name, language)}>
                                 {translateProductName(product.name, language)}
                               </p>
+                              {/* Show category on mobile */}
+                              <span className={`sm:hidden mt-1 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${categoryColor.bg} ${categoryColor.text} border ${categoryColor.border}`}>
+                                {translateCategory(product.category, language)}
+                              </span>
                             </td>
-                            <td className="px-3 py-3">
+                            <td className="hidden sm:table-cell px-3 py-3">
                               <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${categoryColor.bg} ${categoryColor.text} border-2 ${categoryColor.border} shadow-sm`}>
                                 {translateCategory(product.category, language)}
                               </span>
                             </td>
-                            <td className="px-3 py-3">
-                              <span className="text-sm font-semibold text-primary-700">{formatPrice(product.price)}</span>
+                            <td className="px-2 sm:px-3 py-3">
+                              <span className="text-xs sm:text-sm font-semibold text-primary-700">{formatPrice(product.price)}</span>
                             </td>
-                            <td className="px-3 py-3">
+                            <td className="hidden md:table-cell px-3 py-3">
                               <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-accent-50 text-accent-600 border-2 border-accent-200 shadow-sm">
                                 {product.stock || 0}
                               </span>
                             </td>
-                            <td className="px-3 py-3">
-                              <div className="flex items-center gap-2">
+                            <td className="px-2 sm:px-3 py-3">
+                              <div className="flex items-center gap-1 sm:gap-2">
                                 <button
                                   onClick={() => handleEdit(product)}
-                                  className="p-1.5 rounded-full text-accent-500 hover:bg-accent-50 transition-all"
+                                  className="p-1 sm:p-1.5 rounded-full text-accent-500 hover:bg-accent-50 transition-all"
                                   title={t.dashboard.edit}
                                 >
-                                  <PencilIcon className="w-4 h-4" />
+                                  <PencilIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                 </button>
                                 <button
                                   onClick={() => handleDelete(product.id, translateProductName(product.name, language))}
-                                  className="p-1.5 rounded-full text-red-500 hover:bg-red-50 transition-all"
+                                  className="p-1 sm:p-1.5 rounded-full text-red-500 hover:bg-red-50 transition-all"
                                   title={t.dashboard.delete}
                                 >
-                                  <TrashIcon className="w-4 h-4" />
+                                  <TrashIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                 </button>
                               </div>
                             </td>
@@ -311,6 +362,7 @@ export default function DashboardPage() {
                       })}
                     </tbody>
                   </table>
+                  </div>
                 </div>
               </div>
 

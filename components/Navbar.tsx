@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext'
 import { useLanguage } from '@/context/LanguageContext'
 import { useProducts } from '@/context/ProductsContext'
 import { getSearchableText } from '@/lib/translations'
-import { ShoppingCartIcon, UserIcon, MagnifyingGlassIcon, ArrowRightOnRectangleIcon, LanguageIcon } from '@heroicons/react/24/outline'
+import { ShoppingCartIcon, UserIcon, MagnifyingGlassIcon, ArrowRightOnRectangleIcon, LanguageIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -19,6 +19,7 @@ export default function Navbar() {
   const { products } = useProducts()
   const itemCount = getItemCount()
   const [searchTerm, setSearchTerm] = useState('')
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   // Check if a route is active
   const isActive = (path: string) => pathname === path
@@ -40,27 +41,27 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14">
             <Link href="/dashboard" className="flex items-center">
-              <span className="text-lg font-semibold text-primary-800 tracking-tight">HomeDecor</span>
+              <span className="text-base sm:text-lg font-semibold text-primary-800 tracking-tight">HomeDecor</span>
             </Link>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <button
                 onClick={() => {
                   logout()
                   router.push('/shop')
                 }}
-                className="px-4 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
+                className="px-2 sm:px-4 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
               >
                 <ArrowRightOnRectangleIcon className="w-4 h-4" />
-                {t.navbar.logout}
+                <span className="hidden sm:inline">{t.navbar.logout}</span>
               </button>
               {/* Language Toggle - Last */}
               <button
                 onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
-                className="px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
+                className="px-2 sm:px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
                 title={language === 'es' ? 'Switch to English' : 'Cambiar a Español'}
               >
                 <LanguageIcon className="w-4 h-4" />
-                <span>{language === 'es' ? 'EN' : 'ES'}</span>
+                <span className="hidden sm:inline">{language === 'es' ? 'EN' : 'ES'}</span>
               </button>
             </div>
           </div>
@@ -79,8 +80,8 @@ export default function Navbar() {
             <span className="text-lg font-semibold text-primary-800 tracking-tight">HomeDecor</span>
           </Link>
 
-          {/* Search bar */}
-          <div className="hidden md:flex items-center space-x-6 flex-1 max-w-md mx-4">
+          {/* Search bar - Desktop */}
+          <div className="hidden lg:flex items-center space-x-6 flex-1 max-w-md mx-4">
             <form onSubmit={handleSearch} className="flex-1 relative">
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
@@ -93,8 +94,8 @@ export default function Navbar() {
             </form>
           </div>
 
-          {/* Navigation links */}
-          <div className="hidden md:flex items-center space-x-5">
+          {/* Navigation links - Desktop */}
+          <div className="hidden lg:flex items-center space-x-5">
             <Link
               href="/"
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
@@ -128,7 +129,7 @@ export default function Navbar() {
           </div>
 
           {/* User and cart buttons */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3">
             {user ? (
               <>
                 {/* Profile */}
@@ -165,7 +166,7 @@ export default function Navbar() {
                 {/* Language Toggle - Last */}
                 <button
                   onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
-                  className="px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
+                  className="px-2 sm:px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
                   title={language === 'es' ? 'Switch to English' : 'Cambiar a Español'}
                 >
                   <LanguageIcon className="w-4 h-4" />
@@ -177,7 +178,7 @@ export default function Navbar() {
                 {/* Login */}
                 <Link
                   href="/auth/login"
-                  className="px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all flex items-center gap-1.5"
+                  className="px-2 sm:px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all flex items-center gap-1.5"
                 >
                   <UserIcon className="w-4 h-4" />
                   <span className="hidden sm:inline">{t.navbar.login}</span>
@@ -185,14 +186,15 @@ export default function Navbar() {
                 {/* Register */}
                 <Link
                   href="/auth/register"
-                  className="px-4 py-1.5 rounded-full text-xs font-medium bg-accent-400 text-white hover:bg-accent-500 transition-all shadow-sm hover:shadow-md"
+                  className="px-3 sm:px-4 py-1.5 rounded-full text-xs font-medium bg-accent-400 text-white hover:bg-accent-500 transition-all shadow-sm hover:shadow-md"
                 >
-                  {t.navbar.register}
+                  <span className="hidden sm:inline">{t.navbar.register}</span>
+                  <span className="sm:hidden">Reg</span>
                 </Link>
                 {/* Language Toggle - Last */}
                 <button
                   onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
-                  className="px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
+                  className="px-2 sm:px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
                   title={language === 'es' ? 'Switch to English' : 'Cambiar a Español'}
                 >
                   <LanguageIcon className="w-4 h-4" />
@@ -200,8 +202,76 @@ export default function Navbar() {
                 </button>
               </>
             )}
+            {/* Mobile menu button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="lg:hidden p-2 rounded-full text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? (
+                <XMarkIcon className="w-5 h-5" />
+              ) : (
+                <Bars3Icon className="w-5 h-5" />
+              )}
+            </button>
           </div>
         </div>
+
+        {/* Mobile menu */}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden border-t border-gray-200/50 bg-white/95 backdrop-blur-xl">
+            <div className="px-4 py-4 space-y-3">
+              {/* Mobile search */}
+              <form onSubmit={handleSearch} className="relative">
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder={t.navbar.searchPlaceholder}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2 rounded-full border border-gray-200 focus:border-accent-300 focus:ring-1 focus:ring-accent-200 focus:outline-none bg-white/60 backdrop-blur-sm text-primary-800 text-xs placeholder-gray-400 transition-all"
+                />
+              </form>
+
+              {/* Mobile navigation links */}
+              <div className="space-y-1">
+                <Link
+                  href="/"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`block px-4 py-2 rounded-full text-xs font-medium transition-all ${
+                    isActive('/')
+                      ? 'text-accent-500 bg-accent-50'
+                      : 'text-primary-700 hover:text-accent-500 hover:bg-primary-50/50'
+                  }`}
+                >
+                  {t.navbar.home}
+                </Link>
+                <Link
+                  href="/shop"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`block px-4 py-2 rounded-full text-xs font-medium transition-all ${
+                    isActive('/shop')
+                      ? 'text-accent-500 bg-accent-50'
+                      : 'text-primary-700 hover:text-accent-500 hover:bg-primary-50/50'
+                  }`}
+                >
+                  {t.navbar.shop}
+                </Link>
+                <Link
+                  href="/contact"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`block px-4 py-2 rounded-full text-xs font-medium transition-all ${
+                    isActive('/contact')
+                      ? 'text-accent-500 bg-accent-50'
+                      : 'text-primary-700 hover:text-accent-500 hover:bg-primary-50/50'
+                  }`}
+                >
+                  {t.navbar.contact}
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   )

@@ -42,41 +42,46 @@ export default function CartSummary() {
             />
           </div>
           {/* Information and controls */}
-          <div className="flex-1 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex-1">
-              <h3 className="text-sm font-medium text-primary-800 mb-1">{translateProductName(item.name, language)}</h3>
-              <p className="text-xs text-gray-600">{formatPrice(item.price)}</p>
+          <div className="flex-1 flex flex-col gap-3 sm:gap-4">
+            <div className="flex-1 flex items-start justify-between gap-2">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm font-medium text-primary-800 mb-1 truncate">{translateProductName(item.name, language)}</h3>
+                <p className="text-xs text-gray-600">{formatPrice(item.price)}</p>
+              </div>
+              {/* Delete button - top right on mobile */}
+              <button
+                onClick={() => removeFromCart(item.id)}
+                className="p-1.5 sm:p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-all flex-shrink-0"
+                aria-label="Remove item"
+              >
+                <TrashIcon className="w-4 h-4" />
+              </button>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between gap-3">
               {/* Quantity controls */}
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                  className="w-7 h-7 rounded-full bg-primary-50 hover:bg-primary-100 text-primary-700 font-medium text-xs transition-all"
+                  className="w-8 h-8 sm:w-7 sm:h-7 rounded-full bg-primary-50 hover:bg-primary-100 text-primary-700 font-medium text-xs transition-all flex items-center justify-center"
+                  aria-label="Decrease quantity"
                 >
                   -
                 </button>
-                <span className="w-10 text-center font-medium text-primary-800 text-xs">
+                <span className="w-12 sm:w-10 text-center font-medium text-primary-800 text-xs">
                   {item.quantity}
                 </span>
                 <button
                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                  className="w-7 h-7 rounded-full bg-primary-50 hover:bg-primary-100 text-primary-700 font-medium text-xs transition-all"
+                  className="w-8 h-8 sm:w-7 sm:h-7 rounded-full bg-primary-50 hover:bg-primary-100 text-primary-700 font-medium text-xs transition-all flex items-center justify-center"
+                  aria-label="Increase quantity"
                 >
                   +
                 </button>
               </div>
               {/* Total price of item */}
-              <p className="text-sm font-semibold text-primary-700 w-24 text-right">
+              <p className="text-sm sm:text-base font-semibold text-primary-700 text-right">
                 {formatPrice(item.price * item.quantity)}
               </p>
-              {/* Delete button */}
-              <button
-                onClick={() => removeFromCart(item.id)}
-                className="p-1.5 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-all"
-              >
-                <TrashIcon className="w-4 h-4" />
-              </button>
             </div>
           </div>
         </div>

@@ -23,17 +23,17 @@ export default function HeroSection() {
       </div>
 
       {/* Contenido */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 md:py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-12 sm:py-16 md:py-20">
         <div className="max-w-2xl">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white mb-4 leading-tight tracking-tight">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-white mb-3 sm:mb-4 leading-tight tracking-tight">
             {t.hero.title}
             <br />
             <span className="text-accent-200">{t.hero.titleHighlight}</span>
           </h1>
-          <p className="text-sm md:text-base text-gray-100 mb-6 max-w-xl">
+          <p className="text-xs sm:text-sm md:text-base text-gray-100 mb-4 sm:mb-6 max-w-xl">
             {t.hero.description}
           </p>
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
             <Link href="/shop">
               <Button size="lg" className="bg-accent-400 hover:bg-accent-500 text-white border-0">
                 {t.hero.shopNow}

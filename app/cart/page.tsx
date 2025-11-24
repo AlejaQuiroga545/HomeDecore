@@ -32,7 +32,7 @@ export default function CartPage() {
         {/* Checkout button if there are products */}
         {cart.length > 0 && (
           <div className="mt-6 flex justify-end">
-            <Button onClick={handleCheckout} size="lg">
+            <Button onClick={handleCheckout} size="lg" className="w-full sm:w-auto">
               {t.cart.proceedToCheckout}
             </Button>
           </div>

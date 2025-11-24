@@ -27,7 +27,7 @@ function createTransporter() {
   const transporterConfig = {
     host: process.env.SMTP_HOST,
     port: port,
-    secure: secure, // true for port 465, false for others
+    secure: secure, 
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASSWORD,
@@ -154,7 +154,7 @@ export async function sendContactEmail(name: string, email: string, message: str
       from: process.env.SMTP_FROM || process.env.SMTP_USER,
       to: recipientEmail,
       replyTo: email,
-      subject: `New contact form Message from ${safeSubjectName} - HomeDecor`,
+      subject: `New contact form message from ${safeSubjectName} - HomeDecor`,
       html: emailHtml,
     }
 

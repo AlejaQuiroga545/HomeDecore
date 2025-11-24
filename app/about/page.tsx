@@ -13,8 +13,8 @@ export default function AboutPage() {
           <p className="text-gray-600 text-sm">{t.about.subtitle}</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="relative w-full h-64 md:h-80 rounded-2xl overflow-hidden bg-gray-100">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6">
+          <div className="relative w-full h-56 sm:h-64 md:h-80 rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100">
             <Image
               src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop"
               alt="Home Decor"
@@ -25,7 +25,7 @@ export default function AboutPage() {
             <div className="absolute inset-0 bg-gradient-to-t from-primary-900/40 to-transparent"></div>
           </div>
           
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 p-6 flex flex-col justify-center space-y-4">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-gray-200/50 p-4 sm:p-6 flex flex-col justify-center space-y-3 sm:space-y-4">
             <h2 className="text-xl font-semibold text-accent-500 tracking-tight">{t.about.mission}</h2>
             <p className="text-sm text-gray-600 leading-relaxed">
               {t.about.missionText}
@@ -33,7 +33,7 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 p-6 space-y-4">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-gray-200/50 p-4 sm:p-6 space-y-3 sm:space-y-4">
           <h2 className="text-lg font-semibold text-accent-500 tracking-tight mb-3">{t.about.whatWeDo}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

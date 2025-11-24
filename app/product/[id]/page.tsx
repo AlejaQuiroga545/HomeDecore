@@ -96,10 +96,10 @@ export default function ProductDetailPage() {
   return (
     <div className="pt-14 pb-12 min-h-screen bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-gray-200/50 overflow-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 md:p-8">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-gray-200/50 overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 p-4 sm:p-6 md:p-8">
             {/* Product image */}
-            <div className="relative w-full h-80 md:h-[450px] bg-gray-50 rounded-2xl overflow-hidden">
+            <div className="relative w-full h-64 sm:h-80 md:h-[450px] bg-gray-50 rounded-xl sm:rounded-2xl overflow-hidden">
               <Image
                 src={product.image}
                 alt={translateProductName(product.name, language)}
@@ -110,20 +110,20 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Product information */}
-            <div className="flex flex-col justify-center space-y-4">
-              <h1 className="text-2xl md:text-3xl font-semibold text-primary-800 mb-2 tracking-tight">
+            <div className="flex flex-col justify-center space-y-3 sm:space-y-4">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-primary-800 mb-2 tracking-tight">
                 {translateProductName(product.name, language)}
               </h1>
-              <p className="text-sm text-gray-600">
+              <p className="text-xs sm:text-sm text-gray-600">
                 {t.product.category} <span className="font-medium text-primary-700">{translateCategory(product.category, language)}</span>
               </p>
-              <p className="text-2xl font-bold text-primary-700">
+              <p className="text-xl sm:text-2xl font-bold text-primary-700">
                 {formatPrice(product.price)}
               </p>
-              <p className="text-sm text-gray-600 leading-relaxed">
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
                 {product.description}
               </p>
-              <Button onClick={handleAddToCart} size="lg" className="w-full md:w-auto mt-4">
+              <Button onClick={handleAddToCart} size="lg" className="w-full sm:w-auto mt-2 sm:mt-4">
                 {t.product.addToCart}
               </Button>
             </div>

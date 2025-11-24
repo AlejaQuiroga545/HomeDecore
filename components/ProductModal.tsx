@@ -127,15 +127,15 @@ export default function ProductModal({ isOpen, onClose, onSave, editingProduct }
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-5xl max-h-[90vh] overflow-y-auto m-4">
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-brown-800 mb-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="bg-white rounded-lg sm:rounded-xl shadow-xl w-full max-w-5xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+        <div className="p-4 sm:p-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-brown-800 mb-4">
             {editingProduct ? t.productModal.editProduct : t.productModal.addNewProduct}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name and category */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 label={t.productModal.name}
                 value={formData.name}
@@ -159,7 +159,7 @@ export default function ProductModal({ isOpen, onClose, onSave, editingProduct }
             />
 
             {/* Price, Stock and Image */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <Input
                 type="number"
                 label={t.productModal.price}
@@ -193,7 +193,7 @@ export default function ProductModal({ isOpen, onClose, onSave, editingProduct }
                 )}
                 {/* Image preview */}
                 {imagePreview && (
-                  <div className="mt-2 relative w-full h-48 rounded-lg overflow-hidden border bg-gray-50">
+                  <div className="mt-2 relative w-full h-40 sm:h-48 rounded-lg overflow-hidden border bg-gray-50">
                     <Image
                       src={imagePreview}
                       alt="Preview"
@@ -207,11 +207,11 @@ export default function ProductModal({ isOpen, onClose, onSave, editingProduct }
             </div>
 
             {/* Buttons */}
-            <div className="flex gap-4 pt-4">
-              <Button type="submit" className="flex-1" disabled={isUploading}>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
+              <Button type="submit" className="flex-1 w-full sm:w-auto" disabled={isUploading}>
                 {isUploading ? t.productModal.uploading : editingProduct ? `${t.productModal.update} ${t.dashboard.products}` : `${t.productModal.add} ${t.dashboard.products}`}
               </Button>
-              <Button type="button" variant="outline" onClick={onClose} className="flex-1" disabled={isUploading}>
+              <Button type="button" variant="outline" onClick={onClose} className="flex-1 w-full sm:w-auto" disabled={isUploading}>
                 {t.productModal.cancel}
               </Button>
             </div>

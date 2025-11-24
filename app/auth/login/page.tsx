@@ -69,7 +69,7 @@ export default function LoginPage() {
 
   return (
     <div className="pt-16 pb-12 min-h-screen bg-gradient-to-br from-white via-gray-50 to-white flex items-center justify-center px-4">
-      <div className="max-w-sm w-full backdrop-blur-xl bg-white/60 rounded-3xl shadow-xl border border-gray-200/50 p-8 space-y-6">
+      <div className="max-w-sm w-full backdrop-blur-xl bg-white/60 rounded-2xl sm:rounded-3xl shadow-xl border border-gray-200/50 p-6 sm:p-8 space-y-5 sm:space-y-6">
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-semibold text-primary-800 tracking-tight">
             {t.login.title}

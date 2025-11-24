@@ -144,10 +144,10 @@ export default function ProfilePage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <h1 className="text-2xl font-semibold text-primary-800 mb-6 tracking-tight">{t.profile.title}</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           {/* Profile image - Left side */}
           <div className="md:col-span-1">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 p-6">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-gray-200/50 p-4 sm:p-6">
               <div className="relative w-full aspect-square rounded-xl bg-gray-50 overflow-hidden mb-4">
                 {profile.avatar ? (
                   <Image
@@ -181,7 +181,7 @@ export default function ProfilePage() {
 
           {/* Edit form - Right side */}
           <div className="md:col-span-2">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 p-6 space-y-5">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-gray-200/50 p-4 sm:p-6 space-y-4 sm:space-y-5">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-primary-800 tracking-tight">{t.profile.profileInformation}</h2>
                 {!isEditing && (
@@ -211,11 +211,11 @@ export default function ProfilePage() {
 
               {/* Save/cancel buttons when editing */}
               {isEditing && (
-                <div className="flex gap-3 pt-2">
-                  <Button onClick={handleSave} className="flex-1">
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                  <Button onClick={handleSave} className="flex-1 w-full sm:w-auto">
                     {t.profile.saveChanges}
                   </Button>
-                  <Button variant="outline" onClick={handleCancel} className="flex-1">
+                  <Button variant="outline" onClick={handleCancel} className="flex-1 w-full sm:w-auto">
                     {t.profile.cancel}
                   </Button>
                 </div>
