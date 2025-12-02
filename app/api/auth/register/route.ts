@@ -3,6 +3,7 @@ import connectDB from '@/lib/mongodb'
 import User from '@/models/User'
 import { sendWelcomeEmail } from '@/lib/nodemailer'
 import bcrypt from 'bcryptjs'
+import { registerSchema } from '@/lib/validations'
 
 // Register new user
 export async function POST(request: NextRequest) {
@@ -10,14 +11,23 @@ export async function POST(request: NextRequest) {
     await connectDB()
     const { name, email, password } = await request.json()
 
-    // Validate required fields
-    if (!email || !password) {
-      return NextResponse.json({ error: 'Email and password required' }, { status: 400 })
-    }
-
-    // Validate password length
-    if (password.length < 6) {
-      return NextResponse.json({ error: 'Password must be at least 6 characters' }, { status: 400 })
+    // Validate with Yup
+    try {
+      await registerSchema.validate({ name, email, password }, { abortEarly: false })
+    } catch (validationError: any) {
+      const errors = validationError.inner 
+        ? validationError.inner.map((err: any) => ({
+            field: err.path,
+            message: err.message,
+          }))
+        : [{
+            field: validationError.path || 'unknown',
+            message: validationError.message || 'Validation failed',
+          }]
+      return NextResponse.json(
+        { error: 'Validation failed', errors },
+        { status: 400 }
+      )
     }
 
     // Check if user already exists

@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext'
 import { useProducts } from '@/context/ProductsContext'
 import Input from '@/components/Input'
 import Button from '@/components/Button'
-import Swal from 'sweetalert2'
+import Swal from '@/lib/swalConfig'
 import { toast } from 'react-toastify'
 import { TrashIcon, PencilIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
@@ -41,7 +41,7 @@ export default function AdminPage() {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
-      cancelButtonColor: '#8b7359',
+      cancelButtonColor: '#2C2416',
       confirmButtonText: 'Yes, delete it',
       cancelButtonText: 'Cancel',
     }).then((result) => {

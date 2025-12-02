@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext'
 import { useLanguage } from '@/context/LanguageContext'
 import { useProducts } from '@/context/ProductsContext'
 import { getSearchableText } from '@/lib/translations'
-import { ShoppingCartIcon, UserIcon, MagnifyingGlassIcon, ArrowRightOnRectangleIcon, LanguageIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { ShoppingCartIcon, UserIcon, MagnifyingGlassIcon, ArrowRightOnRectangleIcon, LanguageIcon, Bars3Icon, XMarkIcon, HeartIcon } from '@heroicons/react/24/outline'
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -130,6 +130,21 @@ export default function Navbar() {
 
           {/* User and cart buttons */}
           <div className="flex items-center space-x-2 sm:space-x-3">
+            {/* Cart - Always visible */}
+            <Link
+              href="/cart"
+              className="relative px-3 py-1.5 rounded-full text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              {itemCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-accent-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center shadow-md">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
+            
             {user ? (
               <>
                 {/* Profile */}
@@ -139,6 +154,18 @@ export default function Navbar() {
                 >
                   <UserIcon className="w-4 h-4" />
                   <span className="hidden sm:inline">{t.navbar.profile}</span>
+                </Link>
+                {/* Favorites */}
+                <Link
+                  href="/favorites"
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
+                    isActive('/favorites')
+                      ? 'text-red-500 bg-red-50'
+                      : 'text-primary-700 hover:text-red-500 hover:bg-primary-50/50'
+                  }`}
+                >
+                  <HeartIcon className="w-4 h-4" />
+                  <span className="hidden sm:inline">{t.navbar.favorites}</span>
                 </Link>
                 {/* Logout */}
                 <button
@@ -150,27 +177,6 @@ export default function Navbar() {
                 >
                   <ArrowRightOnRectangleIcon className="w-4 h-4" />
                   <span className="hidden sm:inline">{t.navbar.logout}</span>
-                </button>
-                {/* Cart */}
-                <Link
-                  href="/cart"
-                  className="relative px-3 py-1.5 rounded-full text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all"
-                >
-                  <ShoppingCartIcon className="w-5 h-5" />
-                  {itemCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-accent-400 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                      {itemCount}
-                    </span>
-                  )}
-                </Link>
-                {/* Language Toggle - Last */}
-                <button
-                  onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
-                  className="px-2 sm:px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
-                  title={language === 'es' ? 'Switch to English' : 'Cambiar a Español'}
-                >
-                  <LanguageIcon className="w-4 h-4" />
-                  <span className="hidden sm:inline">{language === 'es' ? 'EN' : 'ES'}</span>
                 </button>
               </>
             ) : (
@@ -191,17 +197,17 @@ export default function Navbar() {
                   <span className="hidden sm:inline">{t.navbar.register}</span>
                   <span className="sm:hidden">Reg</span>
                 </Link>
-                {/* Language Toggle - Last */}
-                <button
-                  onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
-                  className="px-2 sm:px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
-                  title={language === 'es' ? 'Switch to English' : 'Cambiar a Español'}
-                >
-                  <LanguageIcon className="w-4 h-4" />
-                  <span className="hidden sm:inline">{language === 'es' ? 'EN' : 'ES'}</span>
-                </button>
               </>
             )}
+            {/* Language Toggle - Always visible */}
+            <button
+              onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
+              className="px-2 sm:px-3 py-1.5 rounded-full text-xs font-medium text-primary-700 hover:text-accent-500 hover:bg-primary-50/50 transition-all duration-200 flex items-center gap-1.5"
+              title={language === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+            >
+              <LanguageIcon className="w-4 h-4" />
+              <span className="hidden sm:inline">{language === 'es' ? 'EN' : 'ES'}</span>
+            </button>
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -268,6 +274,19 @@ export default function Navbar() {
                 >
                   {t.navbar.contact}
                 </Link>
+                {user && (
+                  <Link
+                    href="/favorites"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`block px-4 py-2 rounded-full text-xs font-medium transition-all ${
+                      isActive('/favorites')
+                        ? 'text-red-500 bg-red-50'
+                        : 'text-primary-700 hover:text-red-500 hover:bg-primary-50/50'
+                    }`}
+                  >
+                    {t.navbar.favorites}
+                  </Link>
+                )}
               </div>
             </div>
           </div>

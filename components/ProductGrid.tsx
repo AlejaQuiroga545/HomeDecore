@@ -7,20 +7,22 @@ interface Product {
   name: string
   price: number
   image: string
-  originalName?: string // Original name for cart/backend
+  originalName?: string
+  category?: string
 }
 
 interface ProductGridProps {
   products: Product[]
 }
 
-// Product grid to display in shop
+// Product grid component
 export default function ProductGrid({ products }: ProductGridProps) {
-  // If no products
   if (products.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="text-brown-600 text-lg">No products found.</p>
+      <div className="text-center py-16">
+        <p className="text-sm text-primary-500 font-medium">
+          No se encontraron productos.
+        </p>
       </div>
     )
   }
@@ -35,6 +37,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
           originalName={product.originalName || product.name}
           price={product.price}
           image={product.image}
+          category={product.category}
         />
       ))}
     </div>

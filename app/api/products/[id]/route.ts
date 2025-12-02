@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import connectDB from '@/lib/mongodb'
 import Product from '@/models/Product'
 import mongoose from 'mongoose'
+import { productSchema } from '@/lib/validations'
 
 // Get a product by ID
 export async function GET(
@@ -24,7 +25,12 @@ export async function GET(
     if (!product) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 })
     }
-    return NextResponse.json(product)
+    // Transform product to include id field
+    const productObj = product.toObject()
+    return NextResponse.json({
+      ...productObj,
+      id: product._id.toString(),
+    })
   } catch (error) {
     console.error('Error:', error)
     return NextResponse.json({ error: 'Error fetching product' }, { status: 500 })
@@ -48,6 +54,26 @@ export async function PUT(
     }
     
     const body = await request.json()
+    
+    // Validate with Yup
+    try {
+      await productSchema.validate(body, { abortEarly: false })
+    } catch (validationError: any) {
+      const errors = validationError.inner 
+        ? validationError.inner.map((err: any) => ({
+            field: err.path,
+            message: err.message,
+          }))
+        : [{
+            field: validationError.path || 'unknown',
+            message: validationError.message || 'Validation failed',
+          }]
+      return NextResponse.json(
+        { error: 'Validation failed', errors },
+        { status: 400 }
+      )
+    }
+    
     // Update product in database
     const product = await Product.findByIdAndUpdate(
       id,
@@ -64,7 +90,12 @@ export async function PUT(
     if (!product) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 })
     }
-    return NextResponse.json(product)
+    // Transform product to include id field
+    const productObj = product.toObject()
+    return NextResponse.json({
+      ...productObj,
+      id: product._id.toString(),
+    })
   } catch (error: any) {
     console.error('Error:', error)
     return NextResponse.json(

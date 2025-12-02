@@ -6,7 +6,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'sm' | 'md' | 'lg'
 }
 
-// Reusable button component
+// Button component
 export default function Button({
   children,
   variant = 'primary',
@@ -14,25 +14,18 @@ export default function Button({
   className = '',
   ...props
 }: ButtonProps) {
-  // Base button styles
-  const baseStyles =
-    'font-medium rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 backdrop-blur-sm'
+  const baseStyles = 'font-medium rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2'
   
-  // Color variants
   const variants = {
-    primary:
-      'bg-accent-400 text-white hover:bg-accent-500 focus:ring-accent-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]',
-    secondary:
-      'bg-white/80 text-primary-700 hover:bg-white/90 focus:ring-primary-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]',
-    outline:
-      'border border-primary-300 text-primary-700 hover:bg-primary-50/50 focus:ring-primary-300 backdrop-blur-sm hover:scale-[1.02] active:scale-[0.98]',
+    primary: 'bg-primary-900 text-white hover:bg-primary-800 focus:ring-primary-300 shadow-sm hover:shadow-md',
+    secondary: 'bg-white text-primary-700 hover:bg-primary-50 focus:ring-primary-300 shadow-sm hover:shadow-md border border-primary-200',
+    outline: 'border border-primary-300 text-primary-700 hover:bg-primary-50 focus:ring-primary-300 bg-white/80',
   }
 
-  // Button sizes
   const sizes = {
-    sm: 'px-3.5 py-1.5 text-xs',
-    md: 'px-5 py-2 text-sm',
-    lg: 'px-6 py-2.5 text-sm',
+    sm: 'px-3 py-1.5 text-xs',
+    md: 'px-4 py-2 text-sm',
+    lg: 'px-5 py-2.5 text-sm',
   }
 
   return (

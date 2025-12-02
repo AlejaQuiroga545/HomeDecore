@@ -13,6 +13,8 @@ const nextConfig = {
       },
     ],
   },
+  // Turbopack configuration (Next.js 16 uses Turbopack by default)
+  turbopack: {},
 }
 
 module.exports = nextConfig

@@ -15,47 +15,43 @@ export default function Pagination({
   onPageChange,
 }: PaginationProps) {
   const { t } = useLanguage()
-  // Create array of page numbers
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
 
   return (
-    <div className="flex justify-center items-center gap-2 mt-6">
-      {/* Previous button */}
+    <div className="flex justify-center items-center gap-2">
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+        className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
           currentPage === 1
-            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-            : 'bg-white/80 backdrop-blur-sm text-primary-700 hover:bg-accent-50 hover:text-accent-500 border border-gray-200/50'
+            ? 'bg-primary-100 text-primary-400 cursor-not-allowed'
+            : 'bg-white text-primary-700 hover:bg-primary-50 border border-primary-200 shadow-sm hover:shadow-md'
         }`}
       >
         {t.pagination.previous}
       </button>
 
-      {/* Page numbers */}
       {pages.map((page) => (
         <button
           key={page}
           onClick={() => onPageChange(page)}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+          className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
             currentPage === page
-              ? 'bg-accent-400 text-white shadow-sm'
-              : 'bg-white/80 backdrop-blur-sm text-primary-700 hover:bg-accent-50 hover:text-accent-500 border border-gray-200/50'
+              ? 'bg-primary-900 text-white shadow-md'
+              : 'bg-white text-primary-700 hover:bg-primary-50 border border-primary-200 shadow-sm hover:shadow-md'
           }`}
         >
           {page}
         </button>
       ))}
 
-      {/* Next button */}
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+        className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
           currentPage === totalPages
-            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-            : 'bg-white/80 backdrop-blur-sm text-primary-700 hover:bg-accent-50 hover:text-accent-500 border border-gray-200/50'
+            ? 'bg-primary-100 text-primary-400 cursor-not-allowed'
+            : 'bg-white text-primary-700 hover:bg-primary-50 border border-primary-200 shadow-sm hover:shadow-md'
         }`}
       >
         {t.pagination.next}

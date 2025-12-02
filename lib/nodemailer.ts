@@ -3,6 +3,7 @@ import {
   generateWelcomeEmail,
   generateLoginEmail,
   generateContactEmail,
+  generateContactConfirmationEmail,
 } from './emailTemplates'
 
 // Verify SMTP configuration
@@ -133,7 +134,7 @@ export async function sendLoginEmail(email: string, name?: string): Promise<void
   }
 }
 
-// Send contact form email
+// Send contact form email to HomeDecor
 export async function sendContactEmail(name: string, email: string, message: string): Promise<void> {
   console.log('📧 Sending contact form email from:', email)
   
@@ -178,5 +179,37 @@ export async function sendContactEmail(name: string, email: string, message: str
     }
     
     throw error // Throw for API to handle
+  }
+}
+
+// Send contact confirmation email to user
+export async function sendContactConfirmationEmail(name: string, email: string): Promise<void> {
+  console.log('📧 Sending contact confirmation email to:', email)
+  
+  try {
+    if (!verifySMTPConfig()) {
+      console.warn('Contact confirmation email skipped - SMTP not configured')
+      return
+    }
+
+    const transporter = createTransporter()
+    const emailHtml = generateContactConfirmationEmail(name)
+
+    const mailOptions = {
+      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+      to: email,
+      subject: 'Mensaje recibido - HomeDecor',
+      html: emailHtml,
+    }
+
+    const result = await transporter.sendMail(mailOptions)
+
+    console.log('Contact confirmation email sent successfully to', email)
+    console.log('Message ID:', result.messageId)
+  } catch (error: any) {
+    console.error('Failed to send contact confirmation email to', email)
+    console.error('Error:', error.message || error)
+    
+    // Don't throw - confirmation email failure shouldn't break contact form
   }
 }

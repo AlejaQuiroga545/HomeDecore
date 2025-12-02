@@ -1,5 +1,6 @@
 'use client'
 
+// Admin dashboard - manage products, users and settings
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
@@ -8,7 +9,7 @@ import { translateCategory, translateProductName, getSearchableText } from '@/li
 import { useProducts, Product } from '@/context/ProductsContext'
 import ProductModal from '@/components/ProductModal'
 import Pagination from '@/components/Pagination'
-import Swal from 'sweetalert2'
+import Swal from '@/lib/swalConfig'
 import { toast } from 'react-toastify'
 import { 
   TrashIcon, 
@@ -18,10 +19,12 @@ import {
   Cog6ToothIcon,
   Squares2X2Icon,
   Bars3Icon,
-  XMarkIcon
+  XMarkIcon,
+  HomeIcon
 } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import { formatPrice } from '@/lib/utils'
+import Link from 'next/link'
 
 const ITEMS_PER_PAGE = 12
 
@@ -55,7 +58,6 @@ export default function DashboardPage() {
   // Filter products
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
-      // Search in name (both languages) and description
       const searchLower = searchTerm.toLowerCase()
       const searchableText = getSearchableText(product.name)
       const matchesSearch =
@@ -84,7 +86,7 @@ export default function DashboardPage() {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
-      cancelButtonColor: '#C263F9',
+      cancelButtonColor: '#2C2416',
       confirmButtonText: t.dashboard.yesDelete,
       cancelButtonText: t.common.cancel,
     }).then(async (result) => {
@@ -146,11 +148,11 @@ export default function DashboardPage() {
   // Get color by category
   const getCategoryColor = (category: string) => {
     const colors: Record<string, { bg: string; text: string; border: string }> = {
-      'Furniture': { bg: 'bg-primary-100', text: 'text-primary-800', border: 'border-primary-300' },
-      'Lighting': { bg: 'bg-accent-100', text: 'text-accent-700', border: 'border-accent-300' },
-      'Decor': { bg: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-300' },
+      'Furniture': { bg: 'bg-primary-50', text: 'text-primary-800', border: 'border-primary-200' },
+      'Lighting': { bg: 'bg-accent-50', text: 'text-accent-700', border: 'border-accent-200' },
+      'Decor': { bg: 'bg-warm-50', text: 'text-warm-700', border: 'border-warm-200' },
     }
-    return colors[category] || { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-300' }
+    return colors[category] || { bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200' }
   }
 
   // If not admin, don't show anything
@@ -159,7 +161,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="pt-14 min-h-screen bg-gradient-to-b from-white to-gray-50 flex">
+    <div className="pt-14 lg:pt-0 min-h-screen bg-gradient-to-br from-cream-50 via-white to-cream-50 flex">
       {/* Mobile sidebar overlay */}
       {isSidebarOpen && (
         <div
@@ -168,227 +170,253 @@ export default function DashboardPage() {
         />
       )}
 
-      {/* Sidebar menu */}
+      {/* Sidebar menu - Minimalist design */}
       <aside
-        className={`fixed lg:static left-0 top-14 z-50 w-64 lg:w-56 bg-white/95 lg:bg-white/80 backdrop-blur-xl lg:backdrop-blur-sm shadow-xl lg:shadow-sm border-r border-gray-200/50 h-[calc(100vh-3.5rem)] overflow-y-auto transition-transform duration-300 ${
+        className={`fixed lg:static left-0 top-14 lg:top-0 z-50 w-56 lg:w-56 bg-white/95 lg:bg-white backdrop-blur-xl lg:backdrop-blur-sm shadow-xl lg:shadow-md border-r border-primary-100/30 h-[calc(100vh-3.5rem)] lg:h-screen overflow-y-auto transition-transform duration-300 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
-        <nav className="p-4 space-y-2">
+        <nav className="p-4 space-y-1">
           {/* Close button for mobile */}
-          <div className="flex items-center justify-between mb-4 lg:hidden">
-            <h2 className="text-sm font-semibold text-primary-800">Menu</h2>
+          <div className="flex items-center justify-between mb-6 lg:hidden pb-4 border-b border-primary-100/30">
+            <h2 className="text-sm font-semibold text-primary-900">Menú</h2>
             <button
               onClick={() => setIsSidebarOpen(false)}
-              className="p-2 rounded-full text-primary-700 hover:bg-primary-50 transition-all"
+              className="p-1.5 rounded-lg text-primary-600 hover:bg-primary-50 transition-all"
             >
-              <XMarkIcon className="w-5 h-5" />
+              <XMarkIcon className="w-4 h-4" />
             </button>
           </div>
-          <button
-            onClick={() => {
-              setActiveMenu('products')
-              setIsSidebarOpen(false)
-            }}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-full text-xs font-medium transition-all ${
-              activeMenu === 'products'
-                ? 'bg-accent-400 text-white shadow-sm'
-                : 'text-primary-700 hover:bg-accent-50 hover:text-accent-500'
-            }`}
-          >
-            <Squares2X2Icon className="w-4 h-4" />
-            <span>{t.dashboard.products}</span>
-          </button>
-          <button
-            onClick={() => {
-              handleAddNew()
-              setIsSidebarOpen(false)
-            }}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-full text-xs font-medium text-primary-700 hover:bg-accent-50 hover:text-accent-500 transition-all"
-          >
-            <PlusIcon className="w-4 h-4" />
-            <span>{t.dashboard.addProduct}</span>
-          </button>
-          <button
-            onClick={() => {
-              setActiveMenu('settings')
-              setIsSidebarOpen(false)
-            }}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-full text-xs font-medium transition-all ${
-              activeMenu === 'settings'
-                ? 'bg-accent-400 text-white shadow-sm'
-                : 'text-primary-700 hover:bg-accent-50 hover:text-accent-500'
-            }`}
-          >
-            <Cog6ToothIcon className="w-4 h-4" />
-            <span>{t.dashboard.settings}</span>
-          </button>
+          
+          {/* Dashboard title for desktop */}
+          <div className="hidden lg:block mb-6 pb-4 border-b border-primary-100/30">
+            <h2 className="text-sm font-semibold text-primary-900">Dashboard</h2>
+          </div>
+
+          {/* Navigation items */}
+          <div className="space-y-1">
+            <button
+              onClick={() => {
+                setActiveMenu('products')
+                setIsSidebarOpen(false)
+              }}
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-200 ${
+                activeMenu === 'products'
+                  ? 'bg-primary-900 text-white'
+                  : 'text-primary-700 hover:bg-primary-50'
+              }`}
+            >
+              <Squares2X2Icon className="w-4 h-4" />
+              <span>{t.dashboard.products}</span>
+            </button>
+            
+            <button
+              onClick={() => {
+                handleAddNew()
+                setIsSidebarOpen(false)
+              }}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-primary-700 hover:bg-accent-50 hover:text-accent-600 transition-all border border-dashed border-primary-200 hover:border-accent-300"
+            >
+              <PlusIcon className="w-4 h-4" />
+              <span>{t.dashboard.addProduct}</span>
+            </button>
+            
+            <button
+              onClick={() => {
+                setActiveMenu('settings')
+                setIsSidebarOpen(false)
+              }}
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-200 ${
+                activeMenu === 'settings'
+                  ? 'bg-primary-900 text-white'
+                  : 'text-primary-700 hover:bg-primary-50'
+              }`}
+            >
+              <Cog6ToothIcon className="w-4 h-4" />
+              <span>{t.dashboard.settings}</span>
+            </button>
+
+            <Link
+              href="/shop"
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-primary-700 hover:bg-primary-50 transition-all mt-3"
+            >
+              <HomeIcon className="w-4 h-4" />
+              <span>{language === 'es' ? 'Tienda' : 'Shop'}</span>
+            </Link>
+          </div>
         </nav>
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 lg:ml-56 p-4 sm:p-6">
+      <main className="flex-1 lg:ml-56 p-6 lg:p-8">
         <div className="max-w-7xl mx-auto">
-          {/* Mobile header with menu button */}
-          <div className="flex items-center justify-between mb-6 lg:hidden">
-            <button
-              onClick={() => setIsSidebarOpen(true)}
-              className="p-2 rounded-full text-primary-700 hover:bg-primary-50 transition-all"
-              aria-label="Open menu"
-            >
-              <Bars3Icon className="w-6 h-6" />
-            </button>
-            <h1 className="text-xl font-semibold text-primary-800 tracking-tight">{t.dashboard.title}</h1>
-            <div className="w-10" /> {/* Spacer for centering */}
+          {/* Header */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-xl lg:text-2xl font-semibold text-primary-900 tracking-tight mb-0.5">
+                  {t.dashboard.title}
+                </h1>
+                <p className="text-xs text-primary-500">
+                  {language === 'es' ? 'Gestiona productos, usuarios y configuraciones' : 'Manage products, users and settings'}
+                </p>
+              </div>
+              <button
+                onClick={() => setIsSidebarOpen(true)}
+                className="lg:hidden p-2 rounded-lg text-primary-700 hover:bg-primary-50 transition-all"
+                aria-label="Open menu"
+              >
+                <Bars3Icon className="w-5 h-5" />
+              </button>
+            </div>
           </div>
-          <h1 className="hidden lg:block text-2xl font-semibold text-primary-800 mb-6 tracking-tight">{t.dashboard.title}</h1>
 
           {/* Products view */}
           {activeMenu === 'products' && (
             <>
               {/* Search and filters */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 p-5 mb-6">
-                <div className="space-y-3">
-                  {/* Search bar */}
-                  <div className="relative">
-                    <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input
-                      type="text"
-                      placeholder={t.dashboard.searchPlaceholder}
-                      value={searchTerm}
-                      onChange={(e) => {
-                        setSearchTerm(e.target.value)
+              <div className="mb-6 space-y-3">
+                {/* Search bar */}
+                <div className="relative max-w-md">
+                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-primary-400" />
+                  <input
+                    type="text"
+                    placeholder={t.dashboard.searchPlaceholder}
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value)
+                      setCurrentPage(1)
+                    }}
+                    className="w-full pl-10 pr-4 py-2 rounded-full border border-primary-200 focus:border-accent-400 focus:ring-1 focus:ring-accent-200/30 focus:outline-none bg-white text-primary-800 text-xs placeholder-primary-400 transition-all shadow-sm hover:shadow-md"
+                  />
+                </div>
+
+                {/* Category buttons */}
+                <div className="flex flex-wrap gap-2">
+                  {categories.map((category) => (
+                    <button
+                      key={category}
+                      onClick={() => {
+                        setSelectedCategory(category)
                         setCurrentPage(1)
                       }}
-                      className="w-full pl-9 pr-4 py-2 rounded-full border border-gray-200 focus:border-accent-300 focus:ring-1 focus:ring-accent-200 focus:outline-none bg-white/60 backdrop-blur-sm text-primary-800 text-xs placeholder-gray-400 transition-all"
-                    />
-                  </div>
-
-                  {/* Category buttons */}
-                  <div className="flex flex-wrap gap-2">
-                    {categories.map((category) => (
-                      <button
-                        key={category}
-                        onClick={() => {
-                          setSelectedCategory(category)
-                          setCurrentPage(1)
-                        }}
-                        className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
-                          selectedCategory === category
-                            ? 'bg-accent-400 text-white shadow-sm'
-                            : 'bg-white/80 backdrop-blur-sm text-primary-700 hover:bg-accent-50 hover:text-accent-500 border border-gray-200/50'
-                        }`}
-                      >
-                        {category === 'All' ? t.dashboard.all : translateCategory(category, language)}
-                      </button>
-                    ))}
-                  </div>
+                      className={`px-3 py-1.5 rounded-full text-[10px] font-semibold transition-all duration-200 ${
+                        selectedCategory === category
+                          ? 'bg-primary-900 text-white shadow-md'
+                          : 'bg-white text-primary-700 hover:bg-primary-50 border border-primary-200 hover:border-primary-300 shadow-sm hover:shadow-md'
+                      }`}
+                    >
+                      {category === 'All' ? t.dashboard.all : translateCategory(category, language)}
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              {/* Products table */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 overflow-hidden mb-6">
-                <div className="overflow-x-auto -mx-4 sm:mx-0">
-                  <div className="inline-block min-w-full align-middle">
-                    <table className="min-w-full table-fixed divide-y divide-gray-200/50">
-                    <thead className="bg-gray-50/50 border-b border-gray-200">
-                      <tr>
-                        <th className="w-16 sm:w-20 px-2 sm:px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.image}</th>
-                        <th className="w-24 sm:w-32 px-2 sm:px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.name}</th>
-                        <th className="hidden sm:table-cell w-28 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.category}</th>
-                        <th className="w-20 sm:w-32 px-2 sm:px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.price}</th>
-                        <th className="hidden md:table-cell w-24 px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.stock}</th>
-                        <th className="w-20 sm:w-24 px-2 sm:px-3 py-3 text-left text-xs font-semibold text-primary-700 uppercase tracking-wider">{t.dashboard.actions}</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200/50">
-                      {paginatedProducts.map((product) => {
-                        const categoryColor = getCategoryColor(product.category)
-                        return (
-                          <tr key={product.id} className="hover:bg-gray-50/50 transition-colors">
-                            <td className="px-2 sm:px-3 py-3">
-                              <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gray-50 overflow-hidden">
-                                <Image
-                                  src={product.image}
-                                  alt={translateProductName(product.name, language)}
-                                  fill
-                                  className="object-cover"
-                                  sizes="48px"
-                                />
-                              </div>
-                            </td>
-                            <td className="px-2 sm:px-3 py-3">
-                              <p className="text-xs sm:text-sm font-medium text-primary-800 truncate" title={translateProductName(product.name, language)}>
-                                {translateProductName(product.name, language)}
-                              </p>
-                              {/* Show category on mobile */}
-                              <span className={`sm:hidden mt-1 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${categoryColor.bg} ${categoryColor.text} border ${categoryColor.border}`}>
-                                {translateCategory(product.category, language)}
-                              </span>
-                            </td>
-                            <td className="hidden sm:table-cell px-3 py-3">
-                              <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${categoryColor.bg} ${categoryColor.text} border-2 ${categoryColor.border} shadow-sm`}>
-                                {translateCategory(product.category, language)}
-                              </span>
-                            </td>
-                            <td className="px-2 sm:px-3 py-3">
-                              <span className="text-xs sm:text-sm font-semibold text-primary-700">{formatPrice(product.price)}</span>
-                            </td>
-                            <td className="hidden md:table-cell px-3 py-3">
-                              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-accent-50 text-accent-600 border-2 border-accent-200 shadow-sm">
-                                {product.stock || 0}
-                              </span>
-                            </td>
-                            <td className="px-2 sm:px-3 py-3">
-                              <div className="flex items-center gap-1 sm:gap-2">
-                                <button
-                                  onClick={() => handleEdit(product)}
-                                  className="p-1 sm:p-1.5 rounded-full text-accent-500 hover:bg-accent-50 transition-all"
-                                  title={t.dashboard.edit}
-                                >
-                                  <PencilIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                                </button>
-                                <button
-                                  onClick={() => handleDelete(product.id, translateProductName(product.name, language))}
-                                  className="p-1 sm:p-1.5 rounded-full text-red-500 hover:bg-red-50 transition-all"
-                                  title={t.dashboard.delete}
-                                >
-                                  <TrashIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        )
-                      })}
-                    </tbody>
-                  </table>
-                  </div>
-                </div>
+              {/* Products count */}
+              <div className="mb-4">
+                <p className="text-xs text-primary-500">
+                  {language === 'es' 
+                    ? `Mostrando ${paginatedProducts.length} de ${filteredProducts.length} productos`
+                    : `Showing ${paginatedProducts.length} of ${filteredProducts.length} products`}
+                </p>
+              </div>
+
+              {/* Products cards grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 mb-6">
+                {paginatedProducts.map((product) => {
+                  const categoryColor = getCategoryColor(product.category)
+                  return (
+                    <div
+                      key={product.id}
+                      className="group relative bg-white rounded-xl shadow-sm hover:shadow-lg border border-primary-100/30 overflow-hidden transition-all duration-300 hover:-translate-y-0.5"
+                    >
+                      {/* Product image */}
+                      <div className="relative w-full h-44 bg-gradient-to-br from-cream-50 to-cream-100 overflow-hidden">
+                        <Image
+                          src={product.image}
+                          alt={translateProductName(product.name, language)}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-500"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                        />
+                        {/* Action buttons overlay */}
+                        <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <button
+                            onClick={() => handleEdit(product)}
+                            className="p-2.5 rounded-xl bg-white/95 backdrop-blur-md text-accent-600 hover:bg-accent-500 hover:text-white shadow-lg transition-all hover:scale-110"
+                            title={t.dashboard.edit}
+                          >
+                            <PencilIcon className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(product.id, translateProductName(product.name, language))}
+                            className="p-2.5 rounded-xl bg-white/95 backdrop-blur-md text-red-500 hover:bg-red-500 hover:text-white shadow-lg transition-all hover:scale-110"
+                            title={t.dashboard.delete}
+                          >
+                            <TrashIcon className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                      
+                      {/* Product information */}
+                      <div className="p-4 space-y-2">
+                        <div>
+                          <h3 className="text-xs font-semibold text-primary-900 mb-1.5 line-clamp-2 leading-snug">
+                            {translateProductName(product.name, language)}
+                          </h3>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[9px] font-semibold ${categoryColor.bg} ${categoryColor.text} border ${categoryColor.border}`}>
+                              {translateCategory(product.category, language)}
+                            </span>
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[9px] font-semibold bg-accent-50 text-accent-600 border border-accent-200">
+                              {product.stock || 0}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between pt-2 border-t border-primary-100/30">
+                          <span className="text-sm font-bold text-primary-900">{formatPrice(product.price)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
 
               {/* Message if no products */}
               {paginatedProducts.length === 0 && (
-                <div className="text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50">
-                  <p className="text-gray-600 text-sm">{t.dashboard.noProductsFound}</p>
+                <div className="text-center py-20 bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border-2 border-primary-100/50">
+                  <div className="max-w-sm mx-auto">
+                    <div className="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <Squares2X2Icon className="w-8 h-8 text-primary-400" />
+                    </div>
+                    <p className="text-primary-600 text-sm font-medium">{t.dashboard.noProductsFound}</p>
+                  </div>
                 </div>
               )}
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
-                />
+                <div className="mt-8">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                  />
+                </div>
               )}
             </>
           )}
 
           {/* Settings view */}
           {activeMenu === 'settings' && (
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 p-6">
-              <h2 className="text-lg font-semibold text-primary-800 mb-3 tracking-tight">{t.dashboard.settings}</h2>
-              <p className="text-gray-600 text-sm">{t.dashboard.settingsComingSoon}</p>
+            <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border-2 border-primary-100/50 p-10">
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Cog6ToothIcon className="w-8 h-8 text-primary-400" />
+                </div>
+                <h2 className="text-xl font-bold text-primary-900 mb-2 tracking-tight">{t.dashboard.settings}</h2>
+                <p className="text-primary-600 text-sm">{t.dashboard.settingsComingSoon}</p>
+              </div>
             </div>
           )}
         </div>

@@ -112,7 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Check if user is admin
   const isAdmin = (): boolean => {
-    return user?.role === 'admin' || user?.email === 'admin@admin.com'
+    return user?.role === 'admin' || user?.email === 'admin@homedecor.com'
   }
 
   return (

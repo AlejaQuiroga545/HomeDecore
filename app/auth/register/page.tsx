@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { useAuth } from '@/context/AuthContext'
 import { useLanguage } from '@/context/LanguageContext'
-import Input from '@/components/Input'
 import Button from '@/components/Button'
 import Link from 'next/link'
 import { toast } from 'react-toastify'
@@ -26,14 +25,12 @@ export default function RegisterPage() {
     setError('')
     setIsLoading(true)
 
-    // Validate fields
     if (!name || !email || !password) {
       setError(t.register.fillAllFields)
       setIsLoading(false)
       return
     }
 
-    // Validate password length
     if (password.length < 6) {
       setError(t.register.passwordMinLength)
       setIsLoading(false)
@@ -70,9 +67,12 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="pt-16 pb-12 min-h-screen bg-gradient-to-br from-white via-gray-50 to-white flex items-center justify-center px-4">
-      <div className="max-w-sm w-full backdrop-blur-xl bg-white/60 rounded-2xl sm:rounded-3xl shadow-xl border border-gray-200/50 p-6 sm:p-8 space-y-5 sm:space-y-6">
-        {/* Title */}
+    <div className="pt-16 pb-12 min-h-screen bg-gradient-to-br from-cream-50 via-white to-cream-50 flex items-center justify-center px-4 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-accent-100/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-warm-100/20 rounded-full blur-3xl"></div>
+      
+      <div className="relative max-w-sm w-full backdrop-blur-xl bg-white/80 rounded-3xl shadow-2xl border border-primary-100/50 p-8 space-y-6">
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-semibold text-primary-800 tracking-tight">
             {t.register.title}
@@ -80,66 +80,74 @@ export default function RegisterPage() {
           <p className="text-xs text-gray-500">{t.register.joinUs}</p>
         </div>
 
-        {/* Registration form */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          <Input
-            type="text"
-            label={t.register.name}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder={t.register.namePlaceholder}
-            required
-            className="group"
-          />
+          <div className="space-y-1">
+            <label className="block text-xs font-medium text-primary-700 mb-2">
+              {t.register.name}
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={t.register.namePlaceholder}
+              className="w-full px-0 py-2.5 bg-transparent border-0 border-b-2 border-primary-200 focus:border-accent-500 focus:outline-none text-primary-900 text-sm placeholder-primary-400 transition-colors"
+              required
+            />
+          </div>
 
-          <Input
-            type="email"
-            label={t.register.email}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder={t.register.emailPlaceholder}
-            required
-            className="group"
-          />
+          <div className="space-y-1">
+            <label className="block text-xs font-medium text-primary-700 mb-2">
+              {t.register.email}
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={t.register.emailPlaceholder}
+              className="w-full px-0 py-2.5 bg-transparent border-0 border-b-2 border-primary-200 focus:border-accent-500 focus:outline-none text-primary-900 text-sm placeholder-primary-400 transition-colors"
+              required
+            />
+          </div>
 
-          <Input
-            type="password"
-            label={t.register.password}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder={t.register.passwordPlaceholder}
-            required
-            className="group"
-          />
+          <div className="space-y-1">
+            <label className="block text-xs font-medium text-primary-700 mb-2">
+              {t.register.password}
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder={t.register.passwordPlaceholder}
+              className="w-full px-0 py-2.5 bg-transparent border-0 border-b-2 border-primary-200 focus:border-accent-500 focus:outline-none text-primary-900 text-sm placeholder-primary-400 transition-colors"
+              required
+            />
+          </div>
 
-          {/* Error message */}
           {error && (
             <div className="bg-red-50/80 backdrop-blur-sm border border-red-200/50 text-red-600 px-3 py-2.5 rounded-xl text-xs">
               {error}
             </div>
           )}
 
-          <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+          <Button type="submit" className="w-full rounded-full" size="lg" disabled={isLoading}>
             {isLoading ? t.register.registering : t.register.register}
           </Button>
         </form>
 
-        {/* Separator */}
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-200"></div>
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="px-2 bg-white/60 text-gray-500">{t.register.orContinueWith}</span>
+            <span className="px-2 bg-white/80 text-gray-500">{t.register.orContinueWith}</span>
           </div>
         </div>
 
-        {/* Google button */}
         <button
           type="button"
           onClick={handleGoogleSignIn}
           disabled={isLoading}
-          className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border-2 border-gray-200 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path
@@ -162,7 +170,6 @@ export default function RegisterPage() {
           <span>{t.register.signUpWithGoogle}</span>
         </button>
 
-        {/* Link to login */}
         <p className="text-center text-xs text-gray-500">
           {t.register.haveAccount}{' '}
           <Link href="/auth/login" className="text-accent-500 font-medium hover:text-accent-600 transition-colors">

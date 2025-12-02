@@ -38,8 +38,20 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
   const fetchProducts = async () => {
     try {
       setLoading(true)
-      const response = await api.get('/products')
-      setProducts(response.data)
+      // Request all products without pagination for context
+      const response = await api.get('/products?limit=1000')
+      // Handle both old format (array) and new format (object with products array)
+      const productsData = Array.isArray(response.data) 
+        ? response.data 
+        : (response.data.products || [])
+      
+      // Transform products to include id field
+      const transformedProducts = productsData.map((product: any) => ({
+        ...product,
+        id: product._id ? product._id.toString() : product.id,
+      }))
+      
+      setProducts(transformedProducts)
     } catch (error) {
       console.error('Error fetching products:', error)
     } finally {

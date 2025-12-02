@@ -33,8 +33,8 @@ describe('Login Integration Tests', () => {
   });
 
   it('should login successfully as admin and redirect to dashboard', () => {
-    cy.get('input[type="email"]').type('admin@admin.com');
-    cy.get('input[type="password"]').type('admin123');
+    cy.get('input[type="email"]').type('admin@homedecor.com');
+    cy.get('input[type="password"]').type('xyz1507');
     cy.contains('button', 'Sign in').click();
 
     cy.url().should('include', '/dashboard');

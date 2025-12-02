@@ -5,6 +5,7 @@ import { CartProvider } from '@/context/CartContext'
 import { ProductsProvider } from '@/context/ProductsContext'
 import { AuthProvider } from '@/context/AuthContext'
 import { LanguageProvider } from '@/context/LanguageContext'
+import { FavoritesProvider } from '@/context/FavoritesContext'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -12,7 +13,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <LanguageProvider>
         <AuthProvider>
           <ProductsProvider>
-            <CartProvider>{children}</CartProvider>
+            <FavoritesProvider>
+              <CartProvider>{children}</CartProvider>
+            </FavoritesProvider>
           </ProductsProvider>
         </AuthProvider>
       </LanguageProvider>

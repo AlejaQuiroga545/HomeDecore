@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Home Decor Store',
+  title: 'HomeDecor',
   description: 'Bring Light, Comfort, and Style to Every Room',
 }
 

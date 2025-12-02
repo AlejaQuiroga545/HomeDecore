@@ -3,6 +3,7 @@ import connectDB from '@/lib/mongodb'
 import User from '@/models/User'
 import { sendLoginEmail } from '@/lib/nodemailer'
 import bcrypt from 'bcryptjs'
+import { loginSchema } from '@/lib/validations'
 
 // Login
 export async function POST(request: NextRequest) {
@@ -10,9 +11,23 @@ export async function POST(request: NextRequest) {
     await connectDB()
     const { email, password } = await request.json()
 
-    // Validate that email and password are sent
-    if (!email || !password) {
-      return NextResponse.json({ error: 'Email and password required' }, { status: 400 })
+    // Validate with Yup
+    try {
+      await loginSchema.validate({ email, password }, { abortEarly: false })
+    } catch (validationError: any) {
+      const errors = validationError.inner 
+        ? validationError.inner.map((err: any) => ({
+            field: err.path,
+            message: err.message,
+          }))
+        : [{
+            field: validationError.path || 'unknown',
+            message: validationError.message || 'Validation failed',
+          }]
+      return NextResponse.json(
+        { error: 'Validation failed', errors },
+        { status: 400 }
+      )
     }
 
     // Find user in database

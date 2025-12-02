@@ -41,6 +41,7 @@ export const translations = {
       about: 'Nosotros',
       contact: 'Contacto',
       profile: 'Perfil',
+      favorites: 'Favoritos',
       login: 'Iniciar sesión',
       logout: 'Cerrar sesión',
       register: 'Registrarse',
@@ -56,8 +57,28 @@ export const translations = {
     },
     // Home Page
     home: {
+      newCollection: 'Nueva colección',
       featuredProducts: 'Productos destacados',
       featuredDescription: 'Descubre nuestra selección de los muebles y accesorios más populares',
+      modernHomeTitle: 'Un hogar moderno comienza con HomeDecor',
+      modernHomeDescription: 'Encuentra los muebles perfectos para tu hogar sin romper tu presupuesto.',
+      exploreAllProducts: 'Explorar todos los productos',
+      designInspires: 'Diseño que inspira',
+      designInspiresDesc: 'Cada pieza en nuestra colección ha sido cuidadosamente seleccionada para transformar tus espacios en ambientes únicos y acogedores.',
+      premiumMaterials: 'Materiales de primera calidad',
+      modernDesigns: 'Diseños modernos y atemporales',
+      fastShipping: 'Envío rápido y seguro',
+      exploreCategories: 'Explora por categorías',
+      exploreCategoriesDesc: 'Encuentra exactamente lo que buscas',
+      viewCollection: 'Ver colección →',
+      whyChooseUs: 'Por qué elegirnos',
+      whyChooseUsDesc: 'Somos más que una tienda de muebles',
+      qualityTitle: 'Calidad garantizada',
+      qualityDesc: 'Todos nuestros productos pasan por estrictos controles de calidad',
+      designTitle: 'Diseño exclusivo',
+      designDesc: 'Piezas únicas seleccionadas por nuestro equipo de expertos',
+      serviceTitle: 'Atención personalizada',
+      serviceDesc: 'Te ayudamos a encontrar exactamente lo que necesitas',
     },
     // Shop Page
     shop: {
@@ -140,6 +161,15 @@ export const translations = {
       empty: 'Tu carrito está vacío',
       continueShopping: 'Continuar comprando',
       total: 'Total:',
+    },
+    // Favorites
+    favorites: {
+      title: 'Mis favoritos',
+      empty: 'No tienes productos favoritos',
+      emptyDescription: 'Agrega productos a tus favoritos para verlos aquí',
+      continueShopping: 'Continuar comprando',
+      addedToFavorites: 'añadido a favoritos',
+      removedFromFavorites: 'eliminado de favoritos',
     },
     // Checkout
     checkout: {
@@ -297,8 +327,28 @@ export const translations = {
     },
     // Home Page
     home: {
+      newCollection: 'New collection',
       featuredProducts: 'Featured products',
       featuredDescription: 'Discover our selection of the most popular furniture and accessories',
+      modernHomeTitle: 'A modern home starts with HomeDecor',
+      modernHomeDescription: 'Find the perfect furniture for your home without breaking your budget.',
+      exploreAllProducts: 'Explore all products',
+      designInspires: 'Design that inspires',
+      designInspiresDesc: 'Each piece in our collection has been carefully selected to transform your spaces into unique and welcoming environments.',
+      premiumMaterials: 'Premium quality materials',
+      modernDesigns: 'Modern and timeless designs',
+      fastShipping: 'Fast and secure shipping',
+      exploreCategories: 'Explore by categories',
+      exploreCategoriesDesc: 'Find exactly what you\'re looking for',
+      viewCollection: 'View collection →',
+      whyChooseUs: 'Why choose us',
+      whyChooseUsDesc: 'We are more than a furniture store',
+      qualityTitle: 'Guaranteed quality',
+      qualityDesc: 'All our products go through strict quality controls',
+      designTitle: 'Exclusive design',
+      designDesc: 'Unique pieces selected by our team of experts',
+      serviceTitle: 'Personalized service',
+      serviceDesc: 'We help you find exactly what you need',
     },
     // Shop Page
     shop: {
@@ -381,6 +431,15 @@ export const translations = {
       empty: 'Your cart is empty',
       continueShopping: 'Continue shopping',
       total: 'Total:',
+    },
+    // Favorites
+    favorites: {
+      title: 'My favorites',
+      empty: 'You have no favorite products',
+      emptyDescription: 'Add products to your favorites to see them here',
+      continueShopping: 'Continue shopping',
+      addedToFavorites: 'added to favorites',
+      removedFromFavorites: 'removed from favorites',
     },
     // Checkout
     checkout: {

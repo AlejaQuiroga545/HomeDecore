@@ -4,11 +4,10 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { useLanguage } from '@/context/LanguageContext'
-import Input from '@/components/Input'
 import Button from '@/components/Button'
 import { toast } from 'react-toastify'
-import Swal from 'sweetalert2'
-import { UserIcon } from '@heroicons/react/24/outline'
+import Swal from '@/lib/swalConfig'
+import { UserIcon, PencilIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import api from '@/lib/api'
 
@@ -44,7 +43,6 @@ export default function ProfilePage() {
   const fetchProfile = async () => {
     try {
       setIsLoading(true)
-      // Send email as parameter for manual login
       const email = user?.email || ''
       const response = await api.get(`/users/me?email=${encodeURIComponent(email)}`)
       if (response.data) {
@@ -56,7 +54,6 @@ export default function ProfilePage() {
       }
     } catch (error) {
       console.error('Error fetching profile:', error)
-      // If it fails, use context data
       setProfile({
         name: user?.name || '',
         email: user?.email || '',
@@ -69,7 +66,6 @@ export default function ProfilePage() {
 
   // Save profile changes
   const handleSave = async () => {
-    // Validate that name is not empty
     if (!profile.name.trim()) {
       toast.error(t.profile.nameRequired, {
         position: 'top-right',
@@ -79,7 +75,6 @@ export default function ProfilePage() {
     }
 
     try {
-      // Update profile in database (include email for manual login)
       const response = await api.put('/users/me', {
         email: user?.email,
         name: profile.name,
@@ -92,7 +87,6 @@ export default function ProfilePage() {
           autoClose: 2000,
         })
         setIsEditing(false)
-        // Reload page to update data
         window.location.reload()
       }
     } catch (error: any) {
@@ -118,8 +112,8 @@ export default function ProfilePage() {
       text: t.profile.logoutConfirmText,
       icon: 'question',
       showCancelButton: true,
-      confirmButtonColor: '#C263F9',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: '#C97D60',
+      cancelButtonColor: '#2C2416',
       confirmButtonText: t.profile.yesLogOut,
       cancelButtonText: t.profile.cancel,
     }).then((result) => {
@@ -133,22 +127,28 @@ export default function ProfilePage() {
   // Show loading while fetching data
   if (!user || isLoading) {
     return (
-      <div className="pt-14 pb-12 min-h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center">
-        <p className="text-gray-600 text-sm">{t.profile.loading}</p>
+      <div className="pt-14 pb-12 min-h-screen bg-cream-50 flex items-center justify-center">
+        <p className="text-primary-600 text-sm">{t.profile.loading}</p>
       </div>
     )
   }
 
   return (
-    <div className="pt-14 pb-12 min-h-screen bg-gradient-to-b from-white to-gray-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <h1 className="text-2xl font-semibold text-primary-800 mb-6 tracking-tight">{t.profile.title}</h1>
+    <div className="pt-14 pb-16 min-h-screen bg-cream-50">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-3xl sm:text-4xl font-semibold text-primary-900 mb-3 tracking-tight">
+            {t.profile.title}
+          </h1>
+          <p className="text-sm text-primary-600">Gestiona tu información personal</p>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-          {/* Profile image - Left side */}
-          <div className="md:col-span-1">
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-gray-200/50 p-4 sm:p-6">
-              <div className="relative w-full aspect-square rounded-xl bg-gray-50 overflow-hidden mb-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Profile image - Left side with glass effect */}
+          <div className="lg:col-span-1">
+            <div className="bg-white/60 backdrop-blur-md rounded-3xl shadow-xl border border-primary-100/50 p-6 sticky top-24">
+              <div className="relative w-full aspect-square rounded-3xl bg-gradient-to-br from-cream-100 to-cream-200 overflow-hidden mb-6 shadow-lg">
                 {profile.avatar ? (
                   <Image
                     src={profile.avatar}
@@ -159,20 +159,28 @@ export default function ProfilePage() {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <UserIcon className="w-20 h-20 text-gray-400" />
+                    <UserIcon className="w-24 h-24 text-primary-400" />
+                  </div>
+                )}
+                {isEditing && (
+                  <div className="absolute inset-0 bg-primary-900/50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                    <PencilIcon className="w-8 h-8 text-white" />
                   </div>
                 )}
               </div>
-              {/* Field to edit avatar URL when in edit mode */}
+              
+              {/* Avatar URL input when editing */}
               {isEditing && (
-                <div className="mt-4">
-                  <Input
+                <div className="space-y-2">
+                  <label className="block text-xs font-medium text-primary-700 mb-2">
+                    {t.profile.avatarUrl}
+                  </label>
+                  <input
                     type="text"
-                    label={t.profile.avatarUrl}
                     value={profile.avatar}
                     onChange={(e) => setProfile({ ...profile, avatar: e.target.value })}
                     placeholder={t.profile.avatarUrlPlaceholder}
-                    className="group"
+                    className="w-full px-4 py-2.5 rounded-2xl border border-primary-200 focus:border-accent-500 focus:ring-2 focus:ring-accent-200 focus:outline-none bg-white/80 backdrop-blur-sm text-primary-900 text-sm placeholder-primary-400 transition-all"
                   />
                 </div>
               )}
@@ -180,53 +188,79 @@ export default function ProfilePage() {
           </div>
 
           {/* Edit form - Right side */}
-          <div className="md:col-span-2">
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-gray-200/50 p-4 sm:p-6 space-y-4 sm:space-y-5">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-primary-800 tracking-tight">{t.profile.profileInformation}</h2>
-                {!isEditing && (
-                  <Button onClick={() => setIsEditing(true)} size="sm">
+          <div className="lg:col-span-2">
+            <div className="bg-white/60 backdrop-blur-md rounded-3xl shadow-xl border border-primary-100/50 p-8 space-y-6">
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-primary-100/50">
+                <h2 className="text-xl font-semibold text-primary-900 tracking-tight">
+                  {t.profile.profileInformation}
+                </h2>
+                {!isEditing ? (
+                  <Button 
+                    onClick={() => setIsEditing(true)} 
+                    size="sm"
+                    className="rounded-2xl flex items-center gap-2"
+                  >
+                    <PencilIcon className="w-4 h-4" />
                     {t.profile.editProfile}
                   </Button>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={handleSave}
+                      className="p-2 rounded-2xl bg-accent-500 text-white hover:bg-accent-600 transition-all shadow-md hover:shadow-lg"
+                      aria-label="Save"
+                    >
+                      <CheckIcon className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={handleCancel}
+                      className="p-2 rounded-2xl bg-primary-200 text-primary-700 hover:bg-primary-300 transition-all shadow-md hover:shadow-lg"
+                      aria-label="Cancel"
+                    >
+                      <XMarkIcon className="w-5 h-5" />
+                    </button>
+                  </div>
                 )}
               </div>
 
               {/* Name field */}
-              <Input
-                label={t.profile.name}
-                value={profile.name}
-                onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                disabled={!isEditing}
-                required
-                className="group"
-              />
+              <div className="space-y-2">
+                <label className="block text-xs font-medium text-primary-700 mb-2">
+                  {t.profile.name}
+                </label>
+                <input
+                  type="text"
+                  value={profile.name}
+                  onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                  disabled={!isEditing}
+                  required
+                  className={`w-full px-4 py-3 rounded-2xl border transition-all ${
+                    isEditing
+                      ? 'border-primary-200 focus:border-accent-500 focus:ring-2 focus:ring-accent-200 bg-white/80 backdrop-blur-sm'
+                      : 'border-transparent bg-primary-50/50'
+                  } focus:outline-none text-primary-900 text-sm`}
+                />
+              </div>
 
               {/* Email field (read only) */}
-              <Input
-                label={t.profile.email}
-                value={profile.email}
-                disabled
-                className="group"
-              />
-
-              {/* Save/cancel buttons when editing */}
-              {isEditing && (
-                <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                  <Button onClick={handleSave} className="flex-1 w-full sm:w-auto">
-                    {t.profile.saveChanges}
-                  </Button>
-                  <Button variant="outline" onClick={handleCancel} className="flex-1 w-full sm:w-auto">
-                    {t.profile.cancel}
-                  </Button>
-                </div>
-              )}
+              <div className="space-y-2">
+                <label className="block text-xs font-medium text-primary-700 mb-2">
+                  {t.profile.email}
+                </label>
+                <input
+                  type="email"
+                  value={profile.email}
+                  disabled
+                  className="w-full px-4 py-3 rounded-2xl border border-transparent bg-primary-50/50 text-primary-600 text-sm cursor-not-allowed"
+                />
+              </div>
 
               {/* Logout button */}
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-6 border-t border-primary-100/50">
                 <Button
                   variant="outline"
                   onClick={handleLogout}
-                  className="w-full text-red-500 border-red-300 hover:bg-red-50"
+                  className="w-full rounded-2xl text-red-500 border-red-300 hover:bg-red-50 hover:border-red-400 transition-all"
                 >
                   {t.profile.logOut}
                 </Button>
