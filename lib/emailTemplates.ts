@@ -5,7 +5,7 @@ const brandColors = {
   cream: '#fefdfb',
 }
 
-// Generate welcome email template (simple HTML without Mailgen)
+// Generate welcome email template
 export function generateWelcomeEmail(name?: string) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
   const userName = name || 'there'

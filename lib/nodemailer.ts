@@ -130,7 +130,6 @@ export async function sendLoginEmail(email: string, name?: string): Promise<void
       console.error('Or check your internet connection and firewall settings.')
     }
     
-    // Don't throw - email failures shouldn't break login
   }
 }
 
